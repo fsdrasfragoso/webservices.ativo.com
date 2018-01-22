@@ -4,7 +4,7 @@ files:
   - source: /
     destination: /var/www/ativos/webservices.ativo.com_temp
   - source: index.php
-    destination: /var/www/ativos/.repo/webservices.ativo.com
+    destination: /var/www/ativos/.repo/webservices.ativo.com/public
 permissions:
   - object: /var/www/ativos/webservices.ativo.com_temp
     owner: php-fpm
