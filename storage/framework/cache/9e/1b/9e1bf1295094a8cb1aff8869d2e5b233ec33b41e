@@ -1,0 +1,1 @@
+1512063214a:3:{i:0;O:8:"stdClass":3:{s:16:"id_pedido_status";i:5;s:6:"ds_cod";s:9:"CANCELADO";s:9:"ds_status";s:9:"Cancelado";}i:1;O:8:"stdClass":3:{s:16:"id_pedido_status";i:2;s:6:"ds_cod";s:4:"PAGO";s:9:"ds_status";s:4:"Pago";}i:2;O:8:"stdClass":3:{s:16:"id_pedido_status";i:1;s:6:"ds_cod";s:8:"PENDENTE";s:9:"ds_status";s:8:"Pendente";}}
