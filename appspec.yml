@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /var/www/ativos/webservices.ativo.com_temp
+    destination: /var/www/ativos/webservices.ativo.com_temp/public
   - source: index.php
     destination: /var/www/ativos/.repo/webservices.ativo.com/public
 permissions:
