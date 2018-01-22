@@ -1,0 +1,65 @@
+image: guidametto/php-composer-debian-codedeploy
+
+pipelines:
+  branches:
+    developer:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_DEVELOPER
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
+    master:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_STAGING
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
+    production:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_PRODUCTION
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
+  custom:
+    developer:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_DEVELOPER
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
+    master:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_STAGING
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
+    production:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_PRODUCTION
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
