@@ -2,9 +2,9 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /var/www/ativos/webservices.ativo.com_temp/public
-  - source: index.php
-    destination: /var/www/ativos/.repo/webservices.ativo.com/public
+    destination: /var/www/ativos/webservices.ativo.com_temp
+  - source: public/index.php
+    destination: /var/www/ativos/.repo/webservices.ativo.com
 permissions:
   - object: /var/www/ativos/webservices.ativo.com_temp
     owner: php-fpm
