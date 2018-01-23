@@ -7,8 +7,9 @@ use App\Http\Caches as Caches;
 
 class MobileController{
 
-    function valores($intIdEvento) {
-        return response()->json('valores kits ' . $intIdEvento);
+    function eventos() {
+        $arrDados = Mobile::eventos();
+        return response()->json($arrDados);
     }
 
 }
