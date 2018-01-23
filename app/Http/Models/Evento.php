@@ -84,10 +84,10 @@ class Evento {
         }
 
         $arrDadosDb = Caches::sql("SELECT id_modalidade, nm_modalidade, IF ( id_situacao_cadastro = 0, 'Não', 'Sim') AS status,
-                                       id_situacao_cadastro, nr_metros, IF(nr_inscricoes = 0, 'Ilimitado', nr_inscricoes) as qtd_limite, nr_inscricoes,
-                                       ds_horario, IF (fl_restrito_idade = 0, 'Não', CONCAT( 'Sim - ', nr_restrito_de, ' até ', nr_restrito_ate ) ) AS fl_restrito_idade, getVendasEventoPorModalidade (id_evento, id_modalidade) AS vendas
-                                       FROM sa_evento_modalidade                                       
-                                       WHERE id_evento = " . $intIdEvento);
+                                    id_situacao_cadastro, nr_metros, IF(nr_inscricoes = 0, 'Ilimitado', nr_inscricoes) as qtd_limite, nr_inscricoes,
+                                    ds_horario, IF (fl_restrito_idade = 0, 'Não', CONCAT( 'Sim - ', nr_restrito_de, ' até ', nr_restrito_ate ) ) AS fl_restrito_idade, getVendasEventoPorModalidade (id_evento, id_modalidade) AS vendas
+                                    FROM sa_evento_modalidade                                       
+                                    WHERE id_evento = " . $intIdEvento);
 
         if ($arrDadosDb) {
             $arrRetorno['status'] = 'ok';
@@ -126,7 +126,34 @@ class Evento {
     }
 
     static function kits($intIdEvento) {
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/kits/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/kits/{ID_evento}';
+        }
+
         
+         $arrDadosDb = Caches::sql("SELECT mck.id_modalidade_categoria_kit,
+                                            mc.ds_categoria,
+                                            em.ds_modalidade,
+                                            el.ds_descricao,
+                                            format(mck.vl_kit, 2, 'pt_BR') AS valor_kit,
+                                            format(mck.vl_kit_assinante, 2, 'pt_BR') AS valor_kit_assinante,
+                                            format(mck.vl_kit_estrangeiro, 2, 'pt_BR') AS valor_kit_estrangeiro                                            
+                                        FROM sa_modalidade_categoria_kit mck
+                                        INNER JOIN sa_modalidade_categoria mc ON mc.id_categoria = mck.id_categoria
+                                        INNER JOIN sa_evento_modalidade em ON em.id_modalidade = mc.id_modalidade
+                                        INNER JOIN sa_evento_lote el ON el.id_evento_lote = mck.id_evento_lote
+                                        WHERE em.id_evento =" . $intIdEvento);
+         
+          if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+
+        return $arrRetorno;
     }
 
     static function valoresKits($intIdEvento) {

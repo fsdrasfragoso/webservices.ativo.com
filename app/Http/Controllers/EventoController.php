@@ -32,7 +32,7 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function lotes($intIdEvento) {        
+    function lotes($intIdEvento) {
         $arrDados = Evento::lotes($intIdEvento);
         return response()->json($arrDados);
     }
@@ -47,8 +47,8 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function kits($intIdEvento, $intIdModalidade) {
-        $arrDados = Evento::kits($intIdEvento, $intIdModalidade);
+    function kits($intIdEvento) {
+        $arrDados = Evento::kits($intIdEvento);
         return response()->json($arrDados);
     }
 
