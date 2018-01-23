@@ -42,8 +42,8 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function categorias($intIdEvento, $intIdModalidade) {
-        $arrDados = Evento::categorias($intIdEvento, $intIdModalidade);
+    function categorias($intIdEvento) {
+        $arrDados = Evento::categorias($intIdEvento);
         return response()->json($arrDados);
     }
 

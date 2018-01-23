@@ -75,11 +75,54 @@ class Evento {
     }
 
     static function modalidades($intIdEvento) {
-        
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/modalidades/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/modalidades/{ID_evento}';
+        }
+
+        $arrDadosDb = Caches::sql("SELECT id_modalidade, nm_modalidade, IF ( id_situacao_cadastro = 0, 'Não', 'Sim') AS status,
+                                       id_situacao_cadastro, nr_metros, IF(nr_inscricoes = 0, 'Ilimitado', nr_inscricoes) as qtd_limite, nr_inscricoes,
+                                       ds_horario, IF (fl_restrito_idade = 0, 'Não', CONCAT( 'Sim - ', nr_restrito_de, ' até ', nr_restrito_ate ) ) AS fl_restrito_idade, getVendasEventoPorModalidade (id_evento, id_modalidade) AS vendas
+                                       FROM sa_evento_modalidade                                       
+                                       WHERE id_evento = " . $intIdEvento);
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+
+        return $arrRetorno;
     }
 
     static function categorias($intIdEvento) {
-        
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/categorias/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/categorias/{ID_evento}';
+        }
+
+
+        $arrDadosDb = Caches::sql("SELECT IF(mc.fl_restrito_idade = 0, 'Não', CONCAT( 'Sim - ', mc.nr_restrito_de, ' até ', mc.nr_restrito_ate)) AS restricao,
+                                        mc.fl_restrito_idade, mc.id_categoria, mc.nr_restrito_de, mc.nr_restrito_ate, mc.ds_imagem_kit, mc.fl_gratuito, 
+                                        mc.fl_camiseta, mc.id_modalidade, mc.ds_categoria, mc.fl_exibir_site, mc.dt_inicio, mc.dt_final,
+                                        mc.fl_sexo, mc.fl_permite_inscricao_amigo, mc.ds_kit, mc.nr_quantidade_inscricao, em.ds_modalidade,
+                                        getVendasEventoPorCategoria (id_evento, id_categoria) AS vendas,
+                                        IF(mc.id_tipo_categoria = 1, 'Individual', 'Revezamento') AS tipo_categoria                                       
+                                        FROM sa_modalidade_categoria mc
+                                        INNER JOIN sa_evento_modalidade em ON em.id_modalidade = mc.id_modalidade
+                                        WHERE em.id_evento = " . $intIdEvento);
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+
+        return $arrRetorno;
     }
 
     static function kits($intIdEvento) {
