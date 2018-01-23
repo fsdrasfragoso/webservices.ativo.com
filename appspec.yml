@@ -3,7 +3,7 @@ os: linux
 files:
   - source: /
     destination: /var/www/ativos/webservices.ativo.com_temp
-  - source: index.php
+  - source: public/index.php
     destination: /var/www/ativos/.repo/webservices.ativo.com
 permissions:
   - object: /var/www/ativos/webservices.ativo.com_temp
