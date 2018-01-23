@@ -6,11 +6,12 @@ $app->get('/', function () {
 
 $app->group(['prefix' => 'br'], function () use ($app) {
 
-    // kits 
-    $app->group(['prefix' => 'kits'], function () use ($app) {
-        $app->get('valores/{id_evento:[0-9]+}', 'KitController@valores');
+    // configuração 
+    $app->group(['prefix' => 'config'], function () use ($app) {
+        $app->get('paises', 'AtivoController@paises');
+        $app->get('estados/{id_pais:[0-9]+}', 'AtivoController@estados');
+        $app->get('cidades/{id_pais:[0-9]+}/{id_estado:[0-9]+}', 'AtivoController@cidades');
     });
-
 
     // eventos 
     $app->group(['prefix' => 'eventos'], function () use ($app) {
@@ -23,15 +24,9 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('modalidades/{id_evento:[0-9]+}', 'EventoController@modalidades');
         $app->get('categorias/{id_evento:[0-9]+}/{id_modalidade:[0-9]+}', 'EventoController@categorias');
         $app->get('kits/{id_evento:[0-9]+}/{id_modalidade:[0-9]+}', 'EventoController@kits');
+        $app->get('valores-kit/{id_evento:[0-9]+}/{id_kit:[0-9]+}', 'EventoController@valoresKit');
         $app->get('produtos/{id_evento:[0-9]+}', 'EventoController@produtos');
     });
-
-
-    // mobile
-    $app->group(['prefix' => 'mobile'], function () use ($app) {
-        $app->get('eventos/', 'MobileController@eventos');
-    });
-
 
     // usuários
     $app->group(['prefix' => 'usuario'], function () use ($app) {
@@ -45,6 +40,12 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('resultados/{id_user:[0-9]+}', 'UsuarioController@resultados');
         $app->get('inscricoes/{id_user:[0-9]+}', 'UsuarioController@inscricoes');
         $app->get('fotos/{id_user:[0-9]+}', 'UsuarioController@fotos');
+    });
+
+
+    // mobile
+    $app->group(['prefix' => 'mobile'], function () use ($app) {
+        $app->get('eventos/', 'MobileController@eventos');
     });
 });
 

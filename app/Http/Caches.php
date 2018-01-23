@@ -17,9 +17,10 @@ class Caches {
         if (empty($object)) {
             Cache::forget(md5($sql_key));
             $object = app('db')->select($sql_key);
-            Cache::put(md5($sql_key), $object, 60); //60 minutos para tudo
+            Cache::put(md5($sql_key), $object, 10); //10 minutos para tudo
         }
 
         return $object;
     }
+
 }
