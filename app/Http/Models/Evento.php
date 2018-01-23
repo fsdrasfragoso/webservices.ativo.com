@@ -39,6 +39,22 @@ class Evento {
         return $arrRetorno;
     }
 
+    static function calendario() {
+        
+    }
+
+    static function resultado() {
+        
+    }
+
+    static function inscritos($intIdEvento) {
+        
+    }
+
+    static function fotos($intIdEvento) {
+        
+    }
+
     static function lotes($intIdEvento) {
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/lotes/' . $intIdEvento;
@@ -56,6 +72,76 @@ class Evento {
         }
 
         return $arrRetorno;
+    }
+
+    static function modalidades($intIdEvento) {
+        
+    }
+
+    static function categorias($intIdEvento) {
+        
+    }
+
+    static function kits($intIdEvento) {
+        
+    }
+
+    static function valoresKits($intIdEvento) {
+        
+    }
+
+    static function produtos($intIdEvento) {
+
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/produtos/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/produtos/{ID_evento}';
+        }
+
+
+        $arrDadosDb = Caches::sql("SELECT
+                                            p.id_produto, pc.id_recurso_caracteristica, pr.id_produto_recurso, p.ds_titulo, DATE_FORMAT(p.dt_inicio_exibicao, '%d/%m/%Y') as dt_inicio_exibicao, DATE_FORMAT(p.dt_termino_exibicao, '%d/%m/%Y') as dt_termino_exibicao,
+                                             format(p.nr_preco, 2, 'pt_BR') AS nr_preco , pr.nr_quantidade, pc.ds_caracteristica, pc.ds_cor,
+                                            (SELECT COUNT(*) as total FROM sa_pedido_produto pp
+                                            INNER JOIN sa_pedido p ON p.id_pedido = pp.id_pedido
+                                            WHERE pp.id_produto = p.id_produto AND p.id_pedido_status = 2) as nr_vendas
+                                        FROM
+                                            sa_produto p
+                                        INNER JOIN sa_produto_evento pe ON p.id_produto = pe.id_produto
+                                        LEFT JOIN sa_produto_recurso pr ON pr.id_produto = p.id_produto
+                                        LEFT JOIN sa_recurso_caracteristica AS pc ON (
+                                                pr.id_recurso_1 = pc.id_recurso_caracteristica
+                                                OR pr.id_recurso_2 = pc.id_recurso_caracteristica
+                                        )
+                                        WHERE pe.id_evento = " . $intIdEvento . " 
+                                        GROUP by pc.id_recurso_caracteristica");
+
+        if ($arrDadosDb) {
+            $arrInfo = array();
+            foreach ($arrDadosDb as $objInfo) {
+                $arrInfo[$objInfo->id_produto]['id_produto'] = $objInfo->id_produto;
+                $arrInfo[$objInfo->id_produto]['ds_titulo'] = $objInfo->ds_titulo;
+                $arrInfo[$objInfo->id_produto]['dt_inicio_exibicao'] = $objInfo->dt_inicio_exibicao;
+                $arrInfo[$objInfo->id_produto]['dt_termino_exibicao'] = $objInfo->dt_termino_exibicao;
+                $arrInfo[$objInfo->id_produto]['nr_preco'] = $objInfo->nr_preco;
+                $arrInfo[$objInfo->id_produto]['nr_quantidade'] = $objInfo->nr_quantidade;
+                $arrInfo[$objInfo->id_produto]['nr_vendas'] = $objInfo->nr_vendas;
+                $arrInfo[$objInfo->id_produto]['nr_estoque'] = $objInfo->nr_quantidade - $objInfo->nr_vendas;
+                $arrInfo[$objInfo->id_produto]['ds_caracteristica'][] = $objInfo->ds_caracteristica;
+            }
+
+
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrInfo;
+        }
+
+        return $arrRetorno;
+    }
+
+    static function camisetas($intIdEvento) {
+        
     }
 
 }
