@@ -14,7 +14,7 @@ $app->group(['prefix' => 'br'], function () use ($app) {
     });
 
     // eventos 
-    $app->group(['prefix' => 'eventos'], function () use ($app) {
+    $app->group(['prefix' => 'evento'], function () use ($app) {
         $app->get('getById/{id_evento:[0-9]+}', 'EventoController@getById');
         $app->get('calendario', 'EventoController@calendario');
         $app->get('resultados', 'EventoController@resultado');
@@ -35,8 +35,8 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->post('cadastrar', 'UsuarioController@novoCadastro');
         $app->put('editar/{id_user:[0-9]+}', 'UsuarioController@editarCadastro');
         $app->get('amigos/{id_user:[0-9]+}', 'UsuarioController@amigos');
-        $app->post('add-amigos/{id_user:[0-9]+}', 'UsuarioController@addAmigos');
-        $app->delete('rem-amigos/{id_user:[0-9]+}', 'UsuarioController@remAmigos');
+        $app->post('add-amigo/{id_user:[0-9]+}', 'UsuarioController@addAmigos');
+        $app->delete('rem-amigo/{id_user:[0-9]+}', 'UsuarioController@remAmigos');
         $app->get('resultados/{id_user:[0-9]+}', 'UsuarioController@resultados');
         $app->get('inscricoes/{id_user:[0-9]+}', 'UsuarioController@inscricoes');
         $app->get('fotos/{id_user:[0-9]+}', 'UsuarioController@fotos');
