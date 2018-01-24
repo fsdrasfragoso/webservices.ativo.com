@@ -19,7 +19,7 @@ config/cidades/ID_PAIS/ID_ESTADO
 evento/getById/ID_EVENTO
 evento/calendario
 evento/resultados
-evento/inscritos/ID_EVENTO
+evento/inscritos/ID_EVENTO - aceita filtros via get ex: ?qtd=100&offset=40, retorno padrão para qtd de 50 registros
 evento/fotos/ID_EVENTO
 evento/lotes/ID_EVENTO
 evento/modalidades/ID_EVENTO

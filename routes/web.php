@@ -8,21 +8,33 @@ $app->group(['prefix' => 'br'], function () use ($app) {
 
     // configuração 
     $app->group(['prefix' => 'config'], function () use ($app) {
+        // ok
         $app->get('paises', 'AtivoController@paises');
+        // ok
         $app->get('estados/{id_pais:[0-9]+}', 'AtivoController@estados');
+        // ok
         $app->get('cidades/{id_pais:[0-9]+}/{id_estado:[0-9]+}', 'AtivoController@cidades');
     });
 
     // eventos 
     $app->group(['prefix' => 'evento'], function () use ($app) {
+        // ok
         $app->get('getById/{id_evento:[0-9]+}', 'EventoController@getById');
+
         $app->get('calendario', 'EventoController@calendario');
         $app->get('resultados', 'EventoController@resultado');
+
+        // ok        
         $app->get('inscritos/{id_evento:[0-9]+}', 'EventoController@inscritos');
+
         $app->get('fotos/{id_evento:[0-9]+}', 'EventoController@fotos');
+        // ok
         $app->get('lotes/{id_evento:[0-9]+}', 'EventoController@lotes');
+        // ok
         $app->get('modalidades/{id_evento:[0-9]+}', 'EventoController@modalidades');
+        // ok
         $app->get('categorias/{id_evento:[0-9]+}', 'EventoController@categorias');
+        // ok
         $app->get('kits/{id_evento:[0-9]+}', 'EventoController@kits');
         $app->get('valores-kit/{id_evento:[0-9]+}/{id_kit:[0-9]+}', 'EventoController@valoresKit');
         $app->get('produtos/{id_evento:[0-9]+}', 'EventoController@produtos');
@@ -39,7 +51,9 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->post('add-amigo/{id_user:[0-9]+}', 'UsuarioController@addAmigos');
         $app->delete('rem-amigo/{id_user:[0-9]+}', 'UsuarioController@remAmigos');
         $app->get('resultados/{id_user:[0-9]+}', 'UsuarioController@resultados');
+        // ok
         $app->get('inscricoes/{id_user:[0-9]+}', 'UsuarioController@inscricoes');
+        
         $app->get('fotos/{id_user:[0-9]+}', 'UsuarioController@fotos');
     });
 

@@ -48,7 +48,26 @@ class Evento {
     }
 
     static function inscritos($intIdEvento) {
-        
+
+        $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 50;
+        $intOffset = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
+
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/inscritos/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/inscritos/{ID_evento}';
+        }
+
+        $arrDadosDb = Caches::sql("CALL proc_relatorio_inscritos_webservice(" . $intIdEvento . ", 0, 2, " . $intLimit . ", " . $intOffset . ")");
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+
+        return $arrRetorno;
     }
 
     static function fotos($intIdEvento) {
@@ -134,21 +153,22 @@ class Evento {
             $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/kits/{ID_evento}';
         }
 
-        
-         $arrDadosDb = Caches::sql("SELECT mck.id_modalidade_categoria_kit,
-                                            mc.ds_categoria,
-                                            em.ds_modalidade,
-                                            el.ds_descricao,
-                                            format(mck.vl_kit, 2, 'pt_BR') AS valor_kit,
-                                            format(mck.vl_kit_assinante, 2, 'pt_BR') AS valor_kit_assinante,
-                                            format(mck.vl_kit_estrangeiro, 2, 'pt_BR') AS valor_kit_estrangeiro                                            
-                                        FROM sa_modalidade_categoria_kit mck
-                                        INNER JOIN sa_modalidade_categoria mc ON mc.id_categoria = mck.id_categoria
-                                        INNER JOIN sa_evento_modalidade em ON em.id_modalidade = mc.id_modalidade
-                                        INNER JOIN sa_evento_lote el ON el.id_evento_lote = mck.id_evento_lote
-                                        WHERE em.id_evento =" . $intIdEvento);
-         
-          if ($arrDadosDb) {
+
+        $arrDadosDb = Caches::sql("SELECT mck.id_modalidade_categoria_kit,
+                                        mck.id_evento_lote,
+                                        mc.ds_categoria,
+                                        em.nm_modalidade,
+                                        el.ds_descricao,
+                                        format(mck.vl_kit, 2, 'pt_BR') AS valor_kit,
+                                        format(mck.vl_kit_assinante, 2, 'pt_BR') AS valor_kit_assinante,
+                                        format(mck.vl_kit_estrangeiro, 2, 'pt_BR') AS valor_kit_estrangeiro                                            
+                                    FROM sa_modalidade_categoria_kit mck
+                                    INNER JOIN sa_modalidade_categoria mc ON mc.id_categoria = mck.id_categoria
+                                    INNER JOIN sa_evento_modalidade em ON em.id_modalidade = mc.id_modalidade
+                                    INNER JOIN sa_evento_lote el ON el.id_evento_lote = mck.id_evento_lote
+                                    WHERE em.id_evento =" . $intIdEvento);
+
+        if ($arrDadosDb) {
             $arrRetorno['status'] = 'ok';
             $arrRetorno['dados'] = $arrDadosDb;
         }

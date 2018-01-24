@@ -22,7 +22,7 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function inscritos($intIdEvento) {
+    function inscritos($intIdEvento) {        
         $arrDados = Evento::inscritos($intIdEvento);
         return response()->json($arrDados);
     }
