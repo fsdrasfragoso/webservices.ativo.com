@@ -3,6 +3,7 @@
 namespace App\Http\Models;
 
 use App\Http\Caches as Caches;
+use \App\Http\Helpers as Helpers;
 
 class Evento {
 
@@ -13,7 +14,7 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/getById/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/getById/{ID_EVENTO}';
         }
 
         $arrDadosDb = Caches::sql("SELECT  tc.ds_tarifa, u.ds_nomecompleto as criado_por, m.ds_nomecompleto as modificado_por, c.id_estado, eve.*, DATE_FORMAT(eve.dt_evento, '%d/%m/%Y') AS dt_evento, 
@@ -57,7 +58,7 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/inscritos/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/inscritos/{ID_EVENTO}';
         }
 
         $arrDadosDb = Caches::sql("CALL proc_webservice_relatorio_inscritos(" . $intIdEvento . ", 0, 2, " . $intLimit . ", " . $intOffset . ")");
@@ -80,7 +81,7 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/lotes/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/lotes/{ID_EVENTO}';
         }
 
         $arrDadosDb = Caches::sql("SELECT id_evento_lote, DATE_FORMAT(dt_limite, '%d/%m/%Y') AS dt_limite, nr_inscricoes, ds_descricao FROM sa_evento_lote WHERE id_evento = " . $intIdEvento);
@@ -99,7 +100,7 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/modalidades/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/modalidades/{ID_EVENTO}';
         }
 
         $arrDadosDb = Caches::sql("SELECT id_modalidade, nm_modalidade, IF ( id_situacao_cadastro = 0, 'Não', 'Sim') AS status,
@@ -122,7 +123,7 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/categorias/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/categorias/{ID_EVENTO}';
         }
 
 
@@ -150,7 +151,7 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/kits/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/kits/{ID_EVENTO}';
         }
 
 
@@ -182,9 +183,9 @@ class Evento {
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/valores-kit/' . $intIdEvento . '/' . $intIdCategoria;
 
-        if (!$intIdEvento && !$intIdCategoria) {
+        if (!$intIdEvento || !$intIdCategoria) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/valores-kit/{ID_EVENTO}/{ID_CATEGORIA}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento ou categoria não repassado ex. /evento/valores-kit/{ID_EVENTO}/{ID_CATEGORIA}';
         }
 
         $arrDadosDb = Caches::sql("CALL proc_webservice_valores_kits(" . $intIdEvento . ", " . $intIdCategoria . ", " . $intIdAssinatura . ")");
@@ -204,26 +205,26 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/produtos/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/produtos/{ID_EVENTO}';
         }
 
 
         $arrDadosDb = Caches::sql("SELECT
-                                            p.id_produto, pc.id_recurso_caracteristica, pr.id_produto_recurso, p.ds_titulo, DATE_FORMAT(p.dt_inicio_exibicao, '%d/%m/%Y') as dt_inicio_exibicao, DATE_FORMAT(p.dt_termino_exibicao, '%d/%m/%Y') as dt_termino_exibicao,
-                                             format(p.nr_preco, 2, 'pt_BR') AS nr_preco , pr.nr_quantidade, pc.ds_caracteristica, pc.ds_cor,
-                                            (SELECT COUNT(*) as total FROM sa_pedido_produto pp
-                                            INNER JOIN sa_pedido p ON p.id_pedido = pp.id_pedido
-                                            WHERE pp.id_produto = p.id_produto AND p.id_pedido_status = 2) as nr_vendas
-                                        FROM
-                                            sa_produto p
-                                        INNER JOIN sa_produto_evento pe ON p.id_produto = pe.id_produto
-                                        LEFT JOIN sa_produto_recurso pr ON pr.id_produto = p.id_produto
-                                        LEFT JOIN sa_recurso_caracteristica AS pc ON (
-                                                pr.id_recurso_1 = pc.id_recurso_caracteristica
-                                                OR pr.id_recurso_2 = pc.id_recurso_caracteristica
-                                        )
-                                        WHERE pe.id_evento = " . $intIdEvento . " 
-                                        GROUP by pc.id_recurso_caracteristica");
+                                        p.id_produto, pc.id_recurso_caracteristica, pr.id_produto_recurso, p.ds_titulo, DATE_FORMAT(p.dt_inicio_exibicao, '%d/%m/%Y') as dt_inicio_exibicao, DATE_FORMAT(p.dt_termino_exibicao, '%d/%m/%Y') as dt_termino_exibicao,
+                                         format(p.nr_preco, 2, 'pt_BR') AS nr_preco , pr.nr_quantidade, pc.ds_caracteristica, pc.ds_cor,
+                                        (SELECT COUNT(*) as total FROM sa_pedido_produto pp
+                                        INNER JOIN sa_pedido p ON p.id_pedido = pp.id_pedido
+                                        WHERE pp.id_produto = p.id_produto AND p.id_pedido_status = 2) as nr_vendas
+                                    FROM
+                                        sa_produto p
+                                    INNER JOIN sa_produto_evento pe ON p.id_produto = pe.id_produto
+                                    LEFT JOIN sa_produto_recurso pr ON pr.id_produto = p.id_produto
+                                    LEFT JOIN sa_recurso_caracteristica AS pc ON (
+                                            pr.id_recurso_1 = pc.id_recurso_caracteristica
+                                            OR pr.id_recurso_2 = pc.id_recurso_caracteristica
+                                    )
+                                    WHERE pe.id_evento = " . $intIdEvento . " 
+                                    GROUP by pc.id_recurso_caracteristica");
 
         if ($arrDadosDb) {
             $arrInfo = array();
@@ -253,7 +254,7 @@ class Evento {
 
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/camisetas/{ID_evento}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/camisetas/{ID_EVENTO}';
         }
 
         if (!empty($intIdEvento)) {
@@ -280,6 +281,30 @@ class Evento {
             $arrRetorno['dados'] = $arrDadosDb;
         }
 
+        return $arrRetorno;
+    }
+
+    static function certificado($intIdEvento, $intNumPeito) {
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/certificado/' . $intIdEvento . '/' . $intNumPeito;
+
+        if (!$intIdEvento || !$intNumPeito) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento ou nº de Peito não repassado ex. /evento/certificado/{ID_EVENTO}/{ID_PEITO}';
+        }
+
+        if (!empty($intIdEvento) && !empty($intNumPeito)) {
+            $arrDadosDb = Caches::sql("CALL proc_webservice_certificado(" . $intIdEvento . ", " . $intNumPeito . ")");
+        }
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+
+            $infoCertificado = Helpers::gerarPdfCertificado($arrDadosDb[0]);
+        }
+
+        echo $infoCertificado; die();
         return $arrRetorno;
     }
 

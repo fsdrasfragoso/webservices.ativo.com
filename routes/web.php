@@ -42,6 +42,8 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('produtos/{id_evento:[0-9]+}', 'EventoController@produtos');
         // ok
         $app->get('camisetas/{id_evento:[0-9]+}', 'EventoController@camisetas');
+        
+        $app->get('certificado/{id_evento:[0-9]+}/{id_peito:[0-9]+}', 'EventoController@certificado');
     });
 
     // usuários

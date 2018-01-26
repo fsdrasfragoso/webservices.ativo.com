@@ -67,4 +67,9 @@ class EventoController {
         return response()->json($arrDados);
     }
 
+    function certificado($intIdEvento, $intIdNumPeito) {
+        $arrDados = Evento::certificado($intIdEvento, $intIdNumPeito);        
+        return response()->json($arrDados);
+    }
+
 }
