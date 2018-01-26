@@ -52,8 +52,8 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function valoresKit($intIdEvento) {
-        $arrDados = Evento::valoresKit($intIdEvento);
+    function valoresKit($intIdEvento, $intIdCategoria) {
+        $arrDados = Evento::valoresKit($intIdEvento, $intIdCategoria);
         return response()->json($arrDados);
     }
 

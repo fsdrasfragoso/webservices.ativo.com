@@ -40,7 +40,7 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('valores-kit/{id_evento:[0-9]+}/{id_kit:[0-9]+}', 'EventoController@valoresKit');
         // ok
         $app->get('produtos/{id_evento:[0-9]+}', 'EventoController@produtos');
-        
+        // ok
         $app->get('camisetas/{id_evento:[0-9]+}', 'EventoController@camisetas');
     });
 

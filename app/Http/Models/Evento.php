@@ -40,11 +40,11 @@ class Evento {
     }
 
     static function calendario() {
-        
+        return 'info calendario';
     }
 
     static function resultado() {
-        
+        return 'info resultados';
     }
 
     static function inscritos($intIdEvento) {
@@ -60,7 +60,7 @@ class Evento {
             $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/inscritos/{ID_evento}';
         }
 
-        $arrDadosDb = Caches::sql("CALL proc_relatorio_inscritos_webservice(" . $intIdEvento . ", 0, 2, " . $intLimit . ", " . $intOffset . ")");
+        $arrDadosDb = Caches::sql("CALL proc_webservice_relatorio_inscritos(" . $intIdEvento . ", 0, 2, " . $intLimit . ", " . $intOffset . ")");
 
         if ($arrDadosDb) {
             $arrRetorno['status'] = 'ok';
@@ -71,7 +71,7 @@ class Evento {
     }
 
     static function fotos($intIdEvento) {
-        
+        return 'info fotos';
     }
 
     static function lotes($intIdEvento) {
@@ -176,8 +176,25 @@ class Evento {
         return $arrRetorno;
     }
 
-    static function valoresKits($intIdEvento) {
-        
+    static function valoresKit($intIdEvento, $intIdCategoria) {
+        $intIdAssinatura = (app('request')->input('assinatura') != '') ? app('request')->input('assinatura') : 0;
+
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/valores-kit/' . $intIdEvento . '/' . $intIdCategoria;
+
+        if (!$intIdEvento && !$intIdCategoria) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/valores-kit/{ID_EVENTO}/{ID_CATEGORIA}';
+        }
+
+        $arrDadosDb = Caches::sql("CALL proc_webservice_valores_kits(" . $intIdEvento . ", " . $intIdCategoria . ", " . $intIdAssinatura . ")");
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+
+        return $arrRetorno;
     }
 
     static function produtos($intIdEvento) {
@@ -239,11 +256,7 @@ class Evento {
             $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/camisetas/{ID_evento}';
         }
 
-        if (!empty(app('request')->input('id_evento'))) {
-            $id_evento = app('request')->input('id_evento');
-        }
-
-        if (!empty($id_evento)) {
+        if (!empty($intIdEvento)) {
             $arrDadosDb = Caches::sql("SELECT
                                             ec.id_evento_camiseta, ec.id_evento, ec.id_tamanho_camiseta, ec.nr_cadastrada,
                                             ec.nr_quantidade, ec.fl_sexo, ev.nm_modalidade, ev.ds_modalidade,
@@ -260,13 +273,12 @@ class Evento {
                                         INNER JOIN sa_tamanho_camiseta AS tc ON tc.id_tamanho_camiseta = ec.id_tamanho_camiseta
                                         WHERE ec.id_evento = " . $intIdEvento . "
                                         ORDER BY ev.ds_modalidade ASC");
-
-            if ($arrDadosDb) {
-                $arrRetorno['status'] = 'ok';
-                $arrRetorno['dados'] = $arrDadosDb;
-            }
         }
 
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
 
         return $arrRetorno;
     }
