@@ -231,7 +231,44 @@ class Evento {
     }
 
     static function camisetas($intIdEvento) {
-        
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/camisetas/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/camisetas/{ID_evento}';
+        }
+
+        if (!empty(app('request')->input('id_evento'))) {
+            $id_evento = app('request')->input('id_evento');
+        }
+
+        if (!empty($id_evento)) {
+            $arrDadosDb = Caches::sql("SELECT
+                                            ec.id_evento_camiseta, ec.id_evento, ec.id_tamanho_camiseta, ec.nr_cadastrada,
+                                            ec.nr_quantidade, ec.fl_sexo, ev.nm_modalidade, ev.ds_modalidade,
+                                            IF (ec.id_modalidade,ec.id_modalidade, 0 ) AS id_modalidade,
+                                            ( SELECT COUNT(*) AS total
+                                                FROM sa_pedido_evento AS pv
+                                                INNER JOIN sa_pedido AS pd ON pd.id_pedido = pv.id_pedido
+                                                WHERE pd.id_pedido_status IN (1, 2, 3, 4) AND pv.id_evento = ec.id_evento AND pv.id_tamanho_camiseta = ec.id_tamanho_camiseta
+                                            ) AS vendidas,
+                                            tc.ds_tamanho
+                                        FROM
+                                            sa_evento_camiseta AS ec
+                                        LEFT JOIN sa_evento_modalidade AS ev ON ev.id_modalidade = ec.id_modalidade
+                                        INNER JOIN sa_tamanho_camiseta AS tc ON tc.id_tamanho_camiseta = ec.id_tamanho_camiseta
+                                        WHERE ec.id_evento = " . $intIdEvento . "
+                                        ORDER BY ev.ds_modalidade ASC");
+
+            if ($arrDadosDb) {
+                $arrRetorno['status'] = 'ok';
+                $arrRetorno['dados'] = $arrDadosDb;
+            }
+        }
+
+
+        return $arrRetorno;
     }
 
 }

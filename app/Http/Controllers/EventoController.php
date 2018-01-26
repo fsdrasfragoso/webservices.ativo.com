@@ -22,7 +22,7 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function inscritos($intIdEvento) {        
+    function inscritos($intIdEvento) {
         $arrDados = Evento::inscritos($intIdEvento);
         return response()->json($arrDados);
     }
@@ -59,6 +59,11 @@ class EventoController {
 
     function produtos($intIdEvento) {
         $arrDados = Evento::produtos($intIdEvento);
+        return response()->json($arrDados);
+    }
+
+    function camisetas($intIdEvento) {
+        $arrDados = Evento::camisetas($intIdEvento);
         return response()->json($arrDados);
     }
 
