@@ -4,6 +4,7 @@ namespace App\Http\Models;
 
 use App\Http\Caches as Caches;
 use \App\Http\Helpers as Helpers;
+use PDF;
 
 class Evento {
 
@@ -71,8 +72,28 @@ class Evento {
         return $arrRetorno;
     }
 
-    static function fotos($intIdEvento) {
-        return 'info fotos';
+    static function fotos($intIdEvento, $intNumPeito) {
+
+        $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 50;
+        $intOffset = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
+
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/fotos/' . $intIdEvento . '/' . $intNumPeito;
+
+        if (!$intIdEvento || !$intNumPeito) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento ou ID do usuário não repassado ex. /evento/fotos/{ID_EVENTO}/{ID_PEITO}';
+        }
+
+        if (!empty($intIdEvento) && !empty($intNumPeito)) {
+            $arrDadosDb = Caches::sql("CALL proc_webservice_fotos(" . $intIdEvento . ", " . $intNumPeito . ", " . $intLimit . ", " . $intOffset . ")");
+        }
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+        return $arrRetorno;
     }
 
     static function lotes($intIdEvento) {
@@ -285,6 +306,7 @@ class Evento {
     }
 
     static function certificado($intIdEvento, $intNumPeito) {
+
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/certificado/' . $intIdEvento . '/' . $intNumPeito;
 
@@ -304,7 +326,13 @@ class Evento {
             $infoCertificado = Helpers::gerarPdfCertificado($arrDadosDb[0]);
         }
 
-        echo $infoCertificado; die();
+
+        return PDF::loadHTML($infoCertificado, 'UTF-8')->setPaper('a4')->setOrientation('portrait')
+                        ->setOption('margin-bottom', 0)
+                        ->setWarnings(false)
+                        ->stream();
+        // echo $infoCertificado; 
+        die();
         return $arrRetorno;
     }
 

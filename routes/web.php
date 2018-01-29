@@ -1,7 +1,8 @@
 <?php
 
 $app->get('/', function () {
-    return 'Web Services Ativo.com';
+    
+    //return 'Web Services Ativo.com';
 });
 
 $app->group(['prefix' => 'br'], function () use ($app) {
@@ -27,7 +28,7 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         // ok        
         $app->get('inscritos/{id_evento:[0-9]+}', 'EventoController@inscritos');
 
-        $app->get('fotos/{id_evento:[0-9]+}', 'EventoController@fotos');
+        $app->get('fotos/{id_evento:[0-9]+}/{id_peito:[0-9]+}', 'EventoController@fotos');
         // ok
         $app->get('lotes/{id_evento:[0-9]+}', 'EventoController@lotes');
         // ok
@@ -36,13 +37,13 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('categorias/{id_evento:[0-9]+}', 'EventoController@categorias');
         // ok
         $app->get('kits/{id_evento:[0-9]+}', 'EventoController@kits');
-        
+
         $app->get('valores-kit/{id_evento:[0-9]+}/{id_kit:[0-9]+}', 'EventoController@valoresKit');
         // ok
         $app->get('produtos/{id_evento:[0-9]+}', 'EventoController@produtos');
         // ok
         $app->get('camisetas/{id_evento:[0-9]+}', 'EventoController@camisetas');
-        
+
         $app->get('certificado/{id_evento:[0-9]+}/{id_peito:[0-9]+}', 'EventoController@certificado');
     });
 
@@ -58,7 +59,7 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('resultados/{id_user:[0-9]+}', 'UsuarioController@resultados');
         // ok
         $app->get('inscricoes/{id_user:[0-9]+}', 'UsuarioController@inscricoes');
-        
+
         $app->get('fotos/{id_user:[0-9]+}', 'UsuarioController@fotos');
     });
 
