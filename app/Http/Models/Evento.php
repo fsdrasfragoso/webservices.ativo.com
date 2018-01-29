@@ -307,6 +307,8 @@ class Evento {
 
     static function certificado($intIdEvento, $intNumPeito) {
 
+        $patch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
+
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/certificado/' . $intIdEvento . '/' . $intNumPeito;
 
@@ -325,15 +327,24 @@ class Evento {
 
             $infoCertificado = Helpers::gerarPdfCertificado($arrDadosDb[0]);
         }
+//--page-height 600 --page-width 670
+        $patch = sys_get_temp_dir() . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
+      //  $urlPatch = url('/') . '/' . str_replace('\\', '/', $patch);
 
+        PDF::loadHTML($infoCertificado, 'UTF-8')->setPaper('a4')->setOrientation('Landscape')
+                ->setOption('margin-bottom', 0)
+                ->setOption('margin-top', 0)
+                ->setOption('margin-left', 0)
+                ->setOption('margin-right', 0)
+                ->setOption('page-height', 600)
+                ->setOption('page-width', 670)
+                ->setOption('dpi', 150)
+                ->setWarnings(false)
+                ->save($patch, true);
 
-        return PDF::loadHTML($infoCertificado, 'UTF-8')->setPaper('a4')->setOrientation('portrait')
-                        ->setOption('margin-bottom', 0)
-                        ->setWarnings(false)
-                        ->stream();
-        // echo $infoCertificado; 
-        die();
-        return $arrRetorno;
+        header("Content-type:application/pdf");
+        header("Content-Disposition:attachment;filename='" . $intIdEvento . "_" . $intNumPeito . ".pdf'");
+        readfile($patch);
     }
 
 }
