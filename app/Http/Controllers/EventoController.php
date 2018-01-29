@@ -17,8 +17,8 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function resultados() {
-        $arrDados = Evento::resultados();
+    function resultados($intIdEvento) {
+        $arrDados = Evento::resultados($intIdEvento);
         return response()->json($arrDados);
     }
 
@@ -27,8 +27,8 @@ class EventoController {
         return response()->json($arrDados);
     }
 
-    function fotos($intIdEvento, $intNumPeito) {
-        $arrDados = Evento::fotos($intIdEvento, $intNumPeito);
+    function fotos($intIdEvento) {
+        $arrDados = Evento::fotos($intIdEvento);
         return response()->json($arrDados);
     }
 

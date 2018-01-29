@@ -45,13 +45,34 @@ class Evento {
         return 'info calendario';
     }
 
-    static function resultado() {
-        return 'info resultados';
+    static function resultado($intIdEvento) {
+        $intIdUser = (app('request')->input('id_user') != '') ? app('request')->input('id_user') : 0;
+        $intNumPeito = (app('request')->input('nr_peito') != '') ? app('request')->input('nr_peito') : 0;
+        $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 20;
+        $intOffset = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
+
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/resultado/' . $intIdEvento;
+
+        if (!$intIdEvento || !$intNumPeito) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento não repassado ex. /evento/resultado/{ID_EVENTO}';
+        }
+
+        if (!empty($intIdEvento) && !empty($intNumPeito)) {
+            $arrDadosDb = Caches::sql("CALL proc_webservice_resultado (" . $intIdEvento . ", " . $intNumPeito . ", " . $intIdUser . ", " . $intLimit . ", " . $intOffset . ")");
+        }
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+        return $arrRetorno;
     }
 
     static function inscritos($intIdEvento) {
 
-        $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 50;
+        $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 20;
         $intOffset = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
 
         $arrRetorno['status'] = 'error';
@@ -72,21 +93,22 @@ class Evento {
         return $arrRetorno;
     }
 
-    static function fotos($intIdEvento, $intNumPeito) {
-
-        $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 50;
+    static function fotos($intIdEvento) {
+        $intIdUser = (app('request')->input('id_user') != '') ? app('request')->input('id_user') : 0;
+        $intNumPeito = (app('request')->input('nr_peito') != '') ? app('request')->input('nr_peito') : 0;
+        $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 20;
         $intOffset = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
 
         $arrRetorno['status'] = 'error';
-        $arrRetorno['dados'] = 'Nenhum retorno para /evento/fotos/' . $intIdEvento . '/' . $intNumPeito;
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/fotos/' . $intIdEvento;
 
-        if (!$intIdEvento || !$intNumPeito) {
+        if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
-            $arrRetorno['dados'] = 'Nenhum ID de evento ou ID do usuário não repassado ex. /evento/fotos/{ID_EVENTO}/{ID_PEITO}';
+            $arrRetorno['dados'] = 'Nenhum ID de evento não repassado ex. /evento/fotos/{ID_EVENTO}';
         }
 
         if (!empty($intIdEvento) && !empty($intNumPeito)) {
-            $arrDadosDb = Caches::sql("CALL proc_webservice_fotos(" . $intIdEvento . ", " . $intNumPeito . ", " . $intLimit . ", " . $intOffset . ")");
+            $arrDadosDb = Caches::sql("CALL proc_webservice_fotos(" . $intIdEvento . ", " . $intNumPeito . ", " . $intIdUser . ", " . $intLimit . ", " . $intOffset . ")");
         }
 
         if ($arrDadosDb) {
@@ -326,25 +348,25 @@ class Evento {
             $arrRetorno['dados'] = $arrDadosDb;
 
             $infoCertificado = Helpers::gerarPdfCertificado($arrDadosDb[0]);
+            $patch = sys_get_temp_dir() . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
+
+            PDF::loadHTML($infoCertificado, 'UTF-8')->setPaper('a4')->setOrientation('Landscape')
+                    ->setOption('margin-bottom', 0)
+                    ->setOption('margin-top', 0)
+                    ->setOption('margin-left', 0)
+                    ->setOption('margin-right', 0)
+                    ->setOption('page-height', 600)
+                    ->setOption('page-width', 670)
+                    ->setOption('dpi', 150)
+                    ->setWarnings(false)
+                    ->save($patch, true);
+
+            header("Content-type:application/pdf");
+            header("Content-Disposition:attachment;filename='" . $intIdEvento . "_" . $intNumPeito . ".pdf'");
+            readfile($patch);
+        } else {
+            return $arrRetorno['dados'];
         }
-//--page-height 600 --page-width 670
-        $patch = sys_get_temp_dir() . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
-      //  $urlPatch = url('/') . '/' . str_replace('\\', '/', $patch);
-
-        PDF::loadHTML($infoCertificado, 'UTF-8')->setPaper('a4')->setOrientation('Landscape')
-                ->setOption('margin-bottom', 0)
-                ->setOption('margin-top', 0)
-                ->setOption('margin-left', 0)
-                ->setOption('margin-right', 0)
-                ->setOption('page-height', 600)
-                ->setOption('page-width', 670)
-                ->setOption('dpi', 150)
-                ->setWarnings(false)
-                ->save($patch, true);
-
-        header("Content-type:application/pdf");
-        header("Content-Disposition:attachment;filename='" . $intIdEvento . "_" . $intNumPeito . ".pdf'");
-        readfile($patch);
     }
 
 }
