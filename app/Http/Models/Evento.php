@@ -45,7 +45,7 @@ class Evento {
         return 'info calendario';
     }
 
-    static function resultado($intIdEvento) {
+    static function resultados($intIdEvento) {
         $intIdUser = (app('request')->input('id_user') != '') ? app('request')->input('id_user') : 0;
         $intNumPeito = (app('request')->input('nr_peito') != '') ? app('request')->input('nr_peito') : 0;
         $intLimit = (app('request')->input('qtd') != '') ? app('request')->input('qtd') : 20;
@@ -59,7 +59,7 @@ class Evento {
             $arrRetorno['dados'] = 'Nenhum ID de evento não repassado ex. /evento/resultado/{ID_EVENTO}';
         }
 
-        if (!empty($intIdEvento) && !empty($intNumPeito)) {
+        if (!empty($intIdEvento)) {
             $arrDadosDb = Caches::sql("CALL proc_webservice_resultado (" . $intIdEvento . ", " . $intNumPeito . ", " . $intIdUser . ", " . $intLimit . ", " . $intOffset . ")");
         }
 
@@ -67,6 +67,7 @@ class Evento {
             $arrRetorno['status'] = 'ok';
             $arrRetorno['dados'] = $arrDadosDb;
         }
+
         return $arrRetorno;
     }
 

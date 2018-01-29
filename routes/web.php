@@ -25,7 +25,7 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('calendario', 'EventoController@calendario');
 
 
-        $app->get('resultados', 'EventoController@resultado');
+        $app->get('resultados/{id_evento:[0-9]+}', 'EventoController@resultados');
 
         // ok        
         $app->get('inscritos/{id_evento:[0-9]+}', 'EventoController@inscritos');
