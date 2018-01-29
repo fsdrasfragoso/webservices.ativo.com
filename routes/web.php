@@ -1,8 +1,7 @@
 <?php
 
 $app->get('/', function () {
-
-    //return 'Web Services Ativo.com';
+    return 'Web Services Ativo.com';
 });
 
 $app->group(['prefix' => 'br'], function () use ($app) {
@@ -23,13 +22,11 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('getById/{id_evento:[0-9]+}', 'EventoController@getById');
 
         $app->get('calendario', 'EventoController@calendario');
-
-
+        // ok
         $app->get('resultados/{id_evento:[0-9]+}', 'EventoController@resultados');
-
         // ok        
         $app->get('inscritos/{id_evento:[0-9]+}', 'EventoController@inscritos');
-
+        // ok
         $app->get('fotos/{id_evento:[0-9]+}', 'EventoController@fotos');
         // ok
         $app->get('lotes/{id_evento:[0-9]+}', 'EventoController@lotes');
