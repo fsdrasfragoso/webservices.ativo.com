@@ -1,21 +1,45 @@
-# Lumen PHP Framework
+## Webservices Ativo.com
+Novo projeto para o  Webservices, desenvolvido com Lumen 5.4.*
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+------------
+## URL
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+webservices.ativo.com/[PAIS]/[ROTA]
 
-## Official Documentation
 
-Documentation for the framework can be found on the [Lumen website](http://lumen.laravel.com/docs).
+------------
+## ROTAS
 
-## Security Vulnerabilities
+**- CONFIG**
+config/paises
+config/estados/ID_PAIS
+config/cidades/ID_PAIS/ID_ESTADO
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+**- EVENTOS**
+evento/getById/ID_EVENTO
+evento/calendario
+evento/resultados
+evento/inscritos/ID_EVENTO - aceita filtros via get ex: ?qtd=100&offset=40, retorno padrão para qtd de 50 registros
+evento/fotos/ID_EVENTO
+evento/lotes/ID_EVENTO
+evento/modalidades/ID_EVENTO
+evento/categorias/ID_EVENTO/ID_MODALIDADE
+evento/kits/ID_EVENTO/ID_MODALIDADE
+evento/valores-kit/ID_EVENTO/ID_KIT
+evento/produtos/ID_EVENTO
 
-## License
+**- USUARIOS**
+usuario/login
+usuario/minha-conta
+usuario/cadastrar
+usuario/editar/ID_USER
+usuario/amigos/ID_USER
+usuario/add-amigo/ID_USER
+usuario/rem-amigo/ID_USER
+usuario/resultados/ID_USER
+usuario/inscricoes/ID_USER
+usuario/fotos/ID_USER
 
-The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+**- MOBILE/APP**
+
+

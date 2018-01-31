@@ -81,6 +81,12 @@ $app->singleton(
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
+
+class_alias(Barryvdh\Snappy\Facades\SnappyPdf::class, 'PDF');
+class_alias(Barryvdh\Snappy\Facades\SnappyImage::class, 'SnappyImage');
+$app->register(Barryvdh\Snappy\LumenServiceProvider::class);
+
+
 /*
   |--------------------------------------------------------------------------
   | Load The Application Routes
@@ -95,5 +101,7 @@ $app->singleton(
 $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
     require __DIR__ . '/../routes/web.php';
 });
+
+$app->configure('dompdf');
 
 return $app;
