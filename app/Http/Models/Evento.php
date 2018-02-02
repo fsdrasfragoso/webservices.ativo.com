@@ -209,6 +209,7 @@ class Evento {
         $arrDadosDb = Caches::sql("SELECT mck.id_modalidade_categoria_kit,
                                         mck.id_evento_lote,
                                         mc.ds_categoria,
+                                        mc.id_categoria,
                                         em.nm_modalidade,
                                         el.ds_descricao,
                                         format(mck.vl_kit, 2, 'pt_BR') AS valor_kit,
