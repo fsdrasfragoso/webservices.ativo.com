@@ -108,7 +108,7 @@ class Evento {
             $arrRetorno['dados'] = 'Nenhum ID de evento não repassado ex. /evento/fotos/{ID_EVENTO}';
         }
 
-        if (!empty($intIdEvento) && !empty($intNumPeito)) {
+        if (!empty($intIdEvento)) {
             $arrDadosDb = Caches::sql("CALL proc_webservice_fotos(" . $intIdEvento . ", " . $intNumPeito . ", " . $intIdUser . ", " . $intLimit . ", " . $intOffset . ")");
         }
 
@@ -165,6 +165,13 @@ class Evento {
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/categorias/' . $intIdEvento;
 
+        if (app('request')->input('id_modalidade') != '') {
+            $filtroModalidade = ' AND em.id_modalidade = ' . app('request')->input('id_modalidade');
+        } else {
+            $filtroModalidade = '';
+        }
+
+
         if (!$intIdEvento) {
             $arrRetorno['status'] = 'error';
             $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /evento/categorias/{ID_EVENTO}';
@@ -179,7 +186,7 @@ class Evento {
                                         IF(mc.id_tipo_categoria = 1, 'Individual', 'Revezamento') AS tipo_categoria                                       
                                         FROM sa_modalidade_categoria mc
                                         INNER JOIN sa_evento_modalidade em ON em.id_modalidade = mc.id_modalidade
-                                        WHERE em.id_evento = " . $intIdEvento);
+                                        WHERE em.id_evento = " . $intIdEvento . $filtroModalidade);
 
         if ($arrDadosDb) {
             $arrRetorno['status'] = 'ok';
@@ -202,6 +209,7 @@ class Evento {
         $arrDadosDb = Caches::sql("SELECT mck.id_modalidade_categoria_kit,
                                         mck.id_evento_lote,
                                         mc.ds_categoria,
+                                        mc.id_categoria,
                                         em.nm_modalidade,
                                         el.ds_descricao,
                                         format(mck.vl_kit, 2, 'pt_BR') AS valor_kit,
@@ -349,7 +357,7 @@ class Evento {
             $arrRetorno['dados'] = $arrDadosDb;
 
             $infoCertificado = Helpers::gerarPdfCertificado($arrDadosDb[0]);
-            $patch = sys_get_temp_dir() . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
+            $patch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
 
             PDF::loadHTML($infoCertificado, 'UTF-8')->setPaper('a4')->setOrientation('Landscape')
                     ->setOption('margin-bottom', 0)

@@ -1,0 +1,444 @@
+{
+	"info": {
+		"name": "webservice.ativo.com",
+		"_postman_id": "da4c11d4-b447-4a6a-c09e-814cf2bdb138",
+		"description": "Lista de métodos testados do webservice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CONFIG",
+			"description": "",
+			"item": [
+				{
+					"name": "CONFIG 01 - Lista de Países",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/config/paises",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"config",
+								"paises"
+							]
+						},
+						"description": "Lista de todos os Países ativos"
+					},
+					"response": []
+				},
+				{
+					"name": "CONFIG 02 - Lista de Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/config/estados/33",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"config",
+								"estados",
+								"33"
+							]
+						},
+						"description": "Listagem de estados de acordo com o ID_PAIS informado"
+					},
+					"response": []
+				},
+				{
+					"name": "CONFIG 03 - Lista das Cidades",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com//br/config/cidades/33/16",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"",
+								"br",
+								"config",
+								"cidades",
+								"33",
+								"16"
+							]
+						},
+						"description": "Lista das cidades de acordo com o ID_PAIS e ID_ESTADO informado"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "EVENTOS",
+			"description": "",
+			"item": [
+				{
+					"name": "EVENTO 01 - Get evento por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/getById/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"getById",
+								"34176"
+							]
+						},
+						"description": "Listagem das informações do evento de acordo com ID_EVENTO informado"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 02 - Calendário",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/calendario",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"calendario"
+							]
+						},
+						"description": "Lista de todos os eventos disponíveis na plataforma"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 03 - Resultados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/resultados/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"resultados",
+								"34176"
+							]
+						},
+						"description": "A url aceita alguns filtros via parâmetros GET \nid_user | nr_peito | qtd | offset \n\nRetorno padrão de 20 itens"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 04 - Inscritos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/inscritos/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"inscritos",
+								"34176"
+							]
+						},
+						"description": "Aceita como parâmetros GET \nqtd | offset\n\nRetorno padrão de 20 itens"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 05 - Fotos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://webservice.ativo.oo/br/evento/fotos/34176",
+							"protocol": "http",
+							"host": [
+								"webservice",
+								"ativo",
+								"oo"
+							],
+							"path": [
+								"br",
+								"evento",
+								"fotos",
+								"34176"
+							]
+						},
+						"description": "Retorna listagem de itens FOTOS, aceitando parâmetros GET\n\nid_user | nr_peito | qtd | offset \n\nRetorno padrão de 20 itens"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 06 - Lotes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/lotes/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"lotes",
+								"34176"
+							]
+						},
+						"description": "Listagem de todos os lotes de um determinado evento"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 07 - Modalidades",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/modalidades/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"modalidades",
+								"34176"
+							]
+						},
+						"description": "Listagem de todas modalidades cadastrada em um determinado evento"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 08 - Categorias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/categorias/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"categorias",
+								"34176"
+							]
+						},
+						"description": "Listagem de todas as categorias de um determinado evento, podendo ser filtrado via parâmetro GET id_modalidade"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 09 - Kits",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/kits/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"kits",
+								"34176"
+							]
+						},
+						"description": "Listagem de todos os KITS de algum determinado evento"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 10 - Valores Kits",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/valores-kit/34176/135439",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"valores-kit",
+								"34176",
+								"135439"
+							]
+						},
+						"description": "Lista valor do kit atual de acordo com o LOTE atual\n\nPodendo efetuar filtro de valores com base no parâmetro GET \n\nassinatura = 1 | 0"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 11 - Produtos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/produtos/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"produtos",
+								"34176"
+							]
+						},
+						"description": "Listagem de todos os produtos associados ao evento informado"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO  12 - Camisetas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/camisetas/34176",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"camisetas",
+								"34176"
+							]
+						},
+						"description": "Listagem de todos os tamanhos de camisetas associadas ao evento"
+					},
+					"response": []
+				},
+				{
+					"name": "EVENTO 13 - Certificado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://staging.webservices.ativo.com/br/evento/certificado/34176/1593",
+							"protocol": "http",
+							"host": [
+								"staging",
+								"webservices",
+								"ativo",
+								"com"
+							],
+							"path": [
+								"br",
+								"evento",
+								"certificado",
+								"34176",
+								"1593"
+							]
+						},
+						"description": "Geração do PDF de certificado da prova\n\n"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USUARIOS",
+			"description": "",
+			"item": []
+		}
+	]
+}
