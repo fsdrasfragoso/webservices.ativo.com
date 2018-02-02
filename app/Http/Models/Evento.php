@@ -356,7 +356,7 @@ class Evento {
             $arrRetorno['dados'] = $arrDadosDb;
 
             $infoCertificado = Helpers::gerarPdfCertificado($arrDadosDb[0]);
-            $patch = sys_get_temp_dir() . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
+            $patch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'certificados' . DIRECTORY_SEPARATOR . $intIdEvento . DIRECTORY_SEPARATOR . $intNumPeito . '.pdf';
 
             PDF::loadHTML($infoCertificado, 'UTF-8')->setPaper('a4')->setOrientation('Landscape')
                     ->setOption('margin-bottom', 0)
