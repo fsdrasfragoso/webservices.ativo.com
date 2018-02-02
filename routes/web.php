@@ -1,7 +1,7 @@
 <?php
 
 $app->get('/', function () {
-    return 'Web Services Ativo.com';
+    return 'Web Services Ativo.com (staging)';
 });
 
 $app->group(['prefix' => 'br'], function () use ($app) {
