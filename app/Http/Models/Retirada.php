@@ -68,7 +68,7 @@ class Retirada {
             $arrDadosDb[0]->categorias = self::categoriasEventos($intIdEvento);
 
             $arrRetorno['status'] = 'ok';
-            $arrRetorno['dados'] = $arrDadosDb;
+            $arrRetorno['dados'] = $arrDadosDb[0];
         }
 
         return $arrRetorno;
