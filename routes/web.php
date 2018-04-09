@@ -79,7 +79,7 @@ $app->group(['prefix' => 'br'], function () use ($app) {
 
         $app->get('carregar-evento/{id_evento:[0-9]+}', 'RetiradaController@carregarEvento');
 
-        $app->get('inscritos-evento/{id_evento:[0-9]+}/{tipo}', 'RetiradaController@inscritosEvento');
+        $app->get('inscritos-evento/{id_evento}/{tipo}', 'RetiradaController@inscritosEvento');
 
         $app->get('usuarios-evento/{id_evento:[0-9]+}', 'RetiradaController@usuariosEvento');
 
