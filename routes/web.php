@@ -1,7 +1,7 @@
 <?php
 
 $app->get('/', function () {
-    return 'Web Services Ativo.com (staging)';
+    return 'Web Services Ativo.com (V2.0)';
 });
 
 $app->group(['prefix' => 'br'], function () use ($app) {
@@ -62,10 +62,32 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('fotos/{id_user:[0-9]+}', 'UsuarioController@fotos');
     });
 
-
     // mobile
     $app->group(['prefix' => 'mobile'], function () use ($app) {
         $app->get('eventos/', 'MobileController@eventos');
+    });
+
+
+    // retirada-kit
+    $app->group(['prefix' => 'retirada'], function () use ($app) {
+
+        $app->get('proximos-eventos', 'RetiradaController@proximosEventos');
+
+        $app->get('modalidades-evento/{id_evento:[0-9]+}', 'RetiradaController@modalidadesEventos');
+
+        $app->get('categorias-evento/{id_evento:[0-9]+}', 'RetiradaController@categoriasEventos');
+
+        $app->get('carregar-evento/{id_evento:[0-9]+}', 'RetiradaController@carregarEvento');
+
+        $app->get('inscritos-evento/{id_evento:[0-9]+}/{tipo}', 'RetiradaController@inscritosEvento');
+
+        $app->get('usuarios-evento/{id_evento:[0-9]+}', 'RetiradaController@usuariosEvento');
+
+        $app->get('pedidos-produtos-evento/{id_evento:[0-9]+}', 'RetiradaController@pedidosProdutosEvento');
+
+        $app->get('camisetas-evento/{id_evento:[0-9]+}', 'RetiradaController@camisetasEvento');
+
+        $app->post('sincronizar/{id_evento:[0-9]+}', 'RetiradaController@sincrozinarEvento');
     });
 });
 
