@@ -50,7 +50,7 @@ class Retirada {
         return $arrRetorno;
     }
 
-    static function carregarEvento($intIdEvento) {
+    static function carregarEvento($intIdEvento, $tipo) {
 
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /retirada/carregar-evento/' . $intIdEvento;
@@ -67,10 +67,10 @@ class Retirada {
             $arrDadosDb[0]->modalidades = self::modalidadesEventos($intIdEvento);
             $arrDadosDb[0]->categorias = self::categoriasEventos($intIdEvento);
             $arrDadosDb[0]->camisetas = self::camisetasEvento($intIdEvento);
-            
-            $arrDadosDb[0]->inscritos = self::camisetasEvento($intIdEvento);
-            $arrDadosDb[0]->usuarios = self::camisetasEvento($intIdEvento);
-            $arrDadosDb[0]->pedidos = self::camisetasEvento($intIdEvento);
+
+            $arrDadosDb[0]->inscritos = self::inscritosEvento($intIdEvento, $tipo);
+            $arrDadosDb[0]->usuarios = self::usuariosEvento($intIdEvento);
+            $arrDadosDb[0]->produtos = self::pedidosProdutosEvento($intIdEvento);
 
             $arrRetorno['status'] = 'ok';
             $arrRetorno['dados'] = $arrDadosDb[0];
@@ -80,10 +80,7 @@ class Retirada {
     }
 
     static function inscritosEvento($intIdEvento, $tipo) {
-        
-        $intIdEvento = app('request')->input('id_evento');
-        $tipo = app('request')->input('tipo');
-        
+
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /retirada/inscritos-evento/' . $intIdEvento . '/' . $tipo;
 
@@ -91,10 +88,8 @@ class Retirada {
             $arrRetorno['status'] = 'error';
             $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /retirada/inscritos-evento/{ID_EVENTO}/{TIPO}';
         }
-                
-        echo "CALL proc_webservice_inscritos_evento_tipo_retirada(" . $intIdEvento . ", " . $tipo . ")"; die();
 
-        $arrDadosDb = Caches::sql("CALL proc_webservice_inscritos_evento_tipo_retirada(" . $intIdEvento . ", " . $tipo . ")");
+        $arrDadosDb = Caches::sql("CALL proc_webservice_inscritos_evento_tipo_retirada(" . $intIdEvento . ", '" . $tipo . "')");
 
         if ($arrDadosDb) {
             $arrRetorno['status'] = 'ok';

@@ -40,8 +40,8 @@ class RetiradaController {
       @param intIdEvento - Id do Evento para retornar os dados
      */
 
-    function carregarEvento($intIdEvento) {
-        $arrDados = Retirada::carregarEvento($intIdEvento);
+    function carregarEvento($intIdEvento, $tipo) {
+        $arrDados = Retirada::carregarEvento($intIdEvento, $tipo);
         return response()->json($arrDados);
     }
 
@@ -51,7 +51,7 @@ class RetiradaController {
       @param tipo - 1 Retirada Individual / 2 Retirada Grupo / 1,2 Retirada Completa
      */
 
-    function inscritosEvento($intIdEvento, $tipo) {        
+    function inscritosEvento($tipo, $intIdEvento) {
         $arrDados = Retirada::inscritosEvento($intIdEvento, $tipo);
         return response()->json($arrDados);
     }
