@@ -108,7 +108,7 @@ class Retirada {
             $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /retirada/usuarios-evento/{ID_EVENTO}';
         }
 
-        $arrDadosDb = Caches::sql("CALL proc_webservice_usuarios_evento(" . $intIdEvento . ", " . $intTipo . ")");
+        $arrDadosDb = Caches::sql("CALL proc_webservice_usuarios_evento(" . $intIdEvento . ", '" . $intTipo . "')");
 
         if ($arrDadosDb) {
             $arrRetorno['status'] = 'ok';
