@@ -8,6 +8,8 @@ class Caches {
 
     public static function sql($sql_key) {
 
+        return app('db')->select($sql_key);
+        
         $object = Cache::get(md5($sql_key));
 
         if (!empty(app('request')->input('cache'))) {
