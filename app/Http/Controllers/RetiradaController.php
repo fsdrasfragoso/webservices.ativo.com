@@ -61,8 +61,8 @@ class RetiradaController {
       @param intIdEvento - Id do Evento para retornar os dados
      */
 
-    function usuariosEvento($intIdEvento) {
-        $arrDados = Retirada::usuariosEvento($intIdEvento);
+    function usuariosEvento($tipo, $intIdEvento) {
+        $arrDados = Retirada::usuariosEvento($intIdEvento, $tipo);
         return response()->json($arrDados);
     }
 

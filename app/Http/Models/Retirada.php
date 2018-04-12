@@ -68,8 +68,8 @@ class Retirada {
             $arrDadosDb[0]->categorias = self::categoriasEventos($intIdEvento);
             $arrDadosDb[0]->camisetas = self::camisetasEvento($intIdEvento);
 
-            $arrDadosDb[0]->inscritos = self::inscritosEvento($intIdEvento, $tipo);
-            $arrDadosDb[0]->usuarios = self::usuariosEvento($intIdEvento, $tipo);
+            // $arrDadosDb[0]->inscritos = self::inscritosEvento($intIdEvento, $tipo);
+            // $arrDadosDb[0]->usuarios = self::usuariosEvento($intIdEvento, $tipo);
             $arrDadosDb[0]->produtos = self::pedidosProdutosEvento($intIdEvento);
 
             $arrRetorno['status'] = 'ok';
