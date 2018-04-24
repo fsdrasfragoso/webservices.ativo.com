@@ -91,8 +91,33 @@ class RetiradaController {
       @param intIdEvento - Id do Evento para atualizar os dados
      */
 
-    function sincrozinarEvento($intIdEvento) {
-        $arrDados = Retirada::sincrozinarEvento($intIdEvento);
+    function sincronizarRetiradaEvento($intIdEvento) {
+        $arrDados = Retirada::sincronizarRetiradaEvento($intIdEvento);
+        return response()->json($arrDados);
+    }
+
+    function sincronizarRetiradaInfoEvento($intIdEvento) {
+        $arrDados = Retirada::sincronizarRetiradaInfoEvento($intIdEvento);
+        return response()->json($arrDados);
+    }
+
+    function sincronizarInscricoesEvento($intIdEvento) {
+        $arrDados = Retirada::sincronizarInscricoesEvento($intIdEvento);
+        return response()->json($arrDados);
+    }
+
+    function sincronizarNovasInscricoesEvento($intIdEvento) {
+        $arrDados = Retirada::sincronizarNovasInscricoesEvento($intIdEvento);
+        return response()->json($arrDados);
+    }
+
+    function sincronizarUsuariosEvento($intIdEvento) {
+        $arrDados = Retirada::sincronizarUsuariosEvento($intIdEvento);
+        return response()->json($arrDados);
+    }
+
+    function sincronizarFuncionariosEvento($intIdEvento) {
+        $arrDados = Retirada::sincronizarFuncionariosEvento($intIdEvento);
         return response()->json($arrDados);
     }
 

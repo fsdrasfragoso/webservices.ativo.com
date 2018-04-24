@@ -156,12 +156,54 @@ class Retirada {
         return $arrRetorno;
     }
 
-    static function sincrozinarEvento($intIdEvento) {
+    /* Fluxo de retirada */
+
+    static function sincronizarRetiradaEvento($intIdEvento) {
 
         var_dump($intIdEvento);
         var_dump($_POST);
 
-        return $arrRetorno;
+        return 'sincronizar retiradas -' . $intIdEvento;
+    }
+
+    static function sincronizarRetiradaInfoEvento($intIdEvento) {
+
+        var_dump($intIdEvento);
+        var_dump($_POST);
+
+        return 'sincronizar retiradas info -' . $intIdEvento;
+    }
+
+    static function sincronizarInscricoesEvento($intIdEvento) {
+
+        var_dump($intIdEvento);
+        var_dump($_POST);
+
+        return 'sincronizar inscrições -' . $intIdEvento;
+    }
+
+    static function sincronizarNovasInscricoesEvento($intIdEvento) {
+
+        var_dump($intIdEvento);
+        var_dump($_POST);
+
+        return 'sincronizar novas inscrições -' . $intIdEvento;
+    }
+
+    static function sincronizarUsuariosEvento($intIdEvento) {
+
+        var_dump($intIdEvento);
+        var_dump($_POST);
+
+        return 'sincronizar usuários -' . $intIdEvento;
+    }
+
+    static function sincronizarFuncionariosEvento($intIdEvento) {
+
+        var_dump($intIdEvento);
+        var_dump($_POST);
+
+        return 'sincronizar funcionários -' . $intIdEvento;
     }
 
 }
