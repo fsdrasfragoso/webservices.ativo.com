@@ -216,12 +216,14 @@ class Retirada {
 
             var_dump($value);
             die();
-            $idCodigoNovo = $value['cod_inscritos_novo'];
+            $idCodigoNovo = "RETI-" . $value['cod_inscritos_novo'];
 
-            $boolPedidoPagamento = self::buscarPedidoPagamento("RETI-" . $idCodigoNovo);
+            // verificando se já existe um pedido pagamento para essa nova inscrição
+            $boolPedidoPagamento = self::buscarPedidoPagamento($idCodigoNovaInscricao);
             var_dump($boolPedidoPagamento);
+            die();
             // Verificar se já existe esta inscrição
-            if ($boolPedidoPagamento) {
+            if (!$boolPedidoPagamento) {
 
                 // Procurar Usuario Pelo Email
                 $objUsuario = self::buscarPorEmail($value['email']);
@@ -229,76 +231,56 @@ class Retirada {
                 var_dump($objUsuario);
                 die();
 
-                $idUsuario = $objUsuario->id_usuario;
-
+                // verificando se o usuário existe no banco, se não existir é criado um novo usuário
                 if (!$objUsuario) {
-
-                    $arrInfoUsuario = array(
-                        'cod_funcionario' => $value['cod_funcionario'],
-                        'nome_completo' => $value['nome_completo'],
-                        'email' => $value['email'],
-                        'h_tipo_cpf' => $value['h_tipo_cpf'],
-                        'v_nr_documento' => $value['v_nr_documento'],
-                        'nascimento' => date('Y-m-d', strtotime($value['nascimento3'] . '-' . $value['nascimento2'] . '-' . $value['nascimento1'])),
-                        'genero' => $value['genero'],
-                        'id_cidade' => $value['id_cidade'],
-                        'telefone' => $value['telefone'],
-                        'celular' => $value['celular'],
-                        'nm_necessidades_especiais' => $value['nm_necessidades_especiais'],
-                        'equipe' => $value['equipe'],
-                        'dt_alterado' => $value['dt_alterado']
-                    );
-
-                    $idUsuario = self::salvarUsuario($arrInfoUsuario);
+                    $idUsuario = self::salvarUsuario(array(
+                                'cod_funcionario' => $value['cod_funcionario'],
+                                'nome_completo' => $value['nome_completo'],
+                                'email' => $value['email'],
+                                'h_tipo_cpf' => $value['h_tipo_cpf'],
+                                'v_nr_documento' => $value['v_nr_documento'],
+                                'nascimento' => date('Y-m-d', strtotime($value['nascimento3'] . '-' . $value['nascimento2'] . '-' . $value['nascimento1'])),
+                                'genero' => $value['genero'],
+                                'id_cidade' => $value['id_cidade'],
+                                'telefone' => $value['telefone'],
+                                'celular' => $value['celular'],
+                                'nm_necessidades_especiais' => $value['nm_necessidades_especiais'],
+                                'equipe' => $value['equipe'],
+                                'dt_alterado' => $value['dt_alterado']
+                    ));
+                } else {
+                    $idUsuario = $objUsuario->id_usuario;
                 }
 
-                // Criar Pedido
-                $arrDadosPedido = array(
-                    'id_usuario' => $arrDados['id_usuario'],
-                    'id_pedido_status' => 2,
-                    'nr_total' => $arrDados['nm_preco'],
-                    'dt_pedido' => $arrDados['dt_alterado'],
-                    'fl_evento_da_casa' => 1,
-                    'fl_local_inscricao' => 3
-                );
+                // salvando o pedido
+                $idPedido = self::salvarPedido(array(
+                            'id_usuario' => $idUsuario,
+                            'nm_preco' => $value['nm_preco'],
+                            'dt_alterado' => $value['dt_alterado']
+                ));
 
-                $arrInfoPedido = array(
-                    'id_usuario' => $idUsuario,
-                    'nm_preco' => $value['nm_preco'],
-                    'dt_alterado' => $value['dt_alterado']
-                );
+                // salvando o pedido evento
+                $idPedidoEvento = self::salvarPedidoEvento(array(
+                            'id_pedido' => $idPedido,
+                            'id_evento' => $value['id_evento'],
+                            'id_modalidade' => $value['modalidade'],
+                            'id_categoria' => $value['categoria'],
+                            'id_usuario' => $idUsuario,
+                            'id_camiseta' => $value['camiseta'],
+                            'nr_peito' => $value['nm_peito'],
+                            'nr_preco' => $value['nm_preco'],
+                            'dt_cadastro' => $value['dt_alterado']
+                ));
 
-                $idPedido = self::salvarPedido($arrDados);
-
-                // Criar Pedido Evento
-                // self::salvarPedidoEvento($arrDados);
-                $db->query('INSERT INTO sa_pedido_evento (
-                                            id_pedido
-                                           ,id_evento
-                                           ,id_modalidade
-                                           ,id_categoria
-                                           ,id_usuario
-                                           ,id_tamanho_camiseta
-                                           ,nr_peito
-                                           ,fl_amigo
-                                           ,nm_qtd
-                                           ,nr_preco
-                                           ,dt_cadastro
-                                ) VALUES (
-                                "' . $idPedido[0]['id'] . '",' .
-                        '"' . str_replace('"', '\'', @$value['id_evento']) . '",' .
-                        '"' . str_replace('"', '\'', @$value['modalidade']) . '",' .
-                        '"' . str_replace('"', '\'', @$value['categoria']) . '",' .
-                        '"' . str_replace('"', '\'', $idUsuario[0]['id_usuario']) . '",' .
-                        '"' . str_replace('"', '\'', @$value['camiseta']) . '",' .
-                        '"' . str_replace('"', '\'', @$value['nm_peito']) . '",' .
-                        '"1",' .
-                        '"1",' .
-                        '"' . str_replace('"', '\'', @$value['nm_preco']) . '",' .
-                        '"' . str_replace('"', '\'', @$value['dt_alterado']) . '")');
-
-                $sql = 'SELECT LAST_INSERT_ID() as id';
-                $idPedidoEvento = $db->fetchAll($sql);
+                // salvando o pedido pagamento
+                $idPedidoPagamento = self::salvarPedidoPagamento(array(
+                            'id_pedido' => $idPedido,
+                            'id_usuario' => $idUsuario,
+                            'forma_pagamento' => $value['camiseta'],
+                            'nr_preco' => $value['nm_preco'],
+                            'dt_alterado' => $value['dt_alterado'],
+                            'cod_inscricao' => $idCodigoNovaInscricao
+                ));
             }
         }
 
@@ -325,9 +307,7 @@ class Retirada {
         return 'sincronizar funcionários - ' . $intIdEvento;
     }
 
-    static function salvarNovaInscricao($arrDados) {
-        
-    }
+    /* metodos de suporte para a api */
 
     static function salvarUsuario($arrDados) {
 
@@ -366,10 +346,24 @@ class Retirada {
     }
 
     static function salvarPedidoEvento($arrDados) {
-        
+
+        $arrDadosPedidoEvento = array(
+            'id_pedido' => $arrDados['id_pedido'],
+            'id_evento' => $arrDados['id_evento'],
+            'id_modalidade' => $arrDados['id_modalidade'],
+            'id_categoria' => $arrDados['id_categoria'],
+            'id_usuario' => $arrDados['id_usuario'],
+            'id_tamanho_camiseta' => $arrDados['id_camiseta'],
+            'nr_peito' => $arrDados['nm_peito'],
+            'fl_amigo' => 1,
+            'nm_qtd' => 1,
+            'nr_preco' => $arrDados['nm_preco'],
+            'dt_cadastro' => $arrDados['dt_alterado']
+        );
+
+        return DB::table('sa_pedido_evento')->insertGetId($arrDadosPedido);
     }
 
-    // Criar Pedido Pagamento
     static function salvarPedidoPagamento($arrDados) {
 
         switch ($arrDados['forma_pagamento']) {
@@ -389,12 +383,12 @@ class Retirada {
 
         $arrDadosPedidoPagamento = array('id_pedido' => $arrDados['id_pedido'],
             'id_usuario' => $arrDados['id_usuario'],
-            'id_formas_pagamento' => $arrDados['forma_pagamento'],
+            'id_formas_pagamento' => $idFormaPagamento,
             'nr_valor' => $arrDados['nm_preco'],
             'nr_valor_pago' => $arrDados['nm_preco'],
             'dt_registro' => $arrDados['dt_alterado'],
             'dt_pagamento' => $arrDados['dt_alterado'],
-            'txt_resultado' => "RETI-" . $idNew,
+            'txt_resultado' => $arrDados['cod_inscricao'],
             'fl_status' => 'CONFIRMADO',
             'nr_parcelas' => 1
         );
@@ -403,15 +397,11 @@ class Retirada {
     }
 
     static function buscarPorEmail($strEmail) {
-        $arrDadosDb = DB::table('sa_usuario')->where('ds_email', $strEmail)->first();
-
-        return $arrDadosDb;
+        return DB::table('sa_usuario')->where('ds_email', $strEmail)->first();
     }
 
     static function buscarPedidoPagamento($info) {
-        $arrDadosDb = DB::table('sa_pedido_pagamento')->where('txt_resultado', $info)->first();
-
-        return $arrDadosDb;
+        return DB::table('sa_pedido_pagamento')->where('txt_resultado', $info)->first();
     }
 
 }
