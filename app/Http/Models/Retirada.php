@@ -160,160 +160,305 @@ class Retirada {
 
     /* Fluxo de retirada */
 
-    static function sincronizarRetiradaEvento($intIdEvento) {
+    static function sincronizarRetiradaEvento() {
 
         $arrDados = app('request')->input('dados');
+        $idEvento = app('request')->input('id_evento');
+        if ($arrDados) {
+            foreach ($arrDados as $name => $value) {
+                $salvar[] = '(' . '"' . $value['cod_retirado'] . '", "' . $value['cod_retirado_info'] . '", "' . $value['id_evento'] . '", "' . $value['id_inscritos'] . '", "' . $value['id_inscritos_produto'] . '", "' . $value['retirado'] . '"' . ')';
+            }
 
-        foreach ($arrDados as $name => $value) {
-            $salvar[] = '(' . '"' . $value['cod_retirado'] . '", "' . $value['cod_retirado_info'] . '", "' . $value['id_evento'] . '", "' . $value['id_inscritos'] . '", "' . $value['id_inscritos_produto'] . '", "' . $value['retirado'] . '"' . ')';
+            DB::insert('INSERT INTO sa_pedido_retirado(id_pedido_retirado, id_pedido_retirado_info, id_evento, id_pedido_evento, id_pedido_produto, retirado) VALUES ' . implode(',', $salvar) . ' ON DUPLICATE KEY UPDATE id_pedido_retirado = VALUES(id_pedido_retirado)');
 
-            echo 'INSERT INTO sa_pedido_retirado (  id_pedido_retirado, id_pedido_retirado_info, id_evento, id_pedido_evento, id_pedido_produto, retirado) 
-            VALUES ' . implode(',', $salvar) . ' ON DUPLICATE KEY UPDATE id_pedido_retirado = VALUES(id_pedido_retirado)';
-
-            var_dump($salvar);
-            die();
-
-            DB::query('INSERT INTO sa_pedido_retirado(id_pedido_retirado, id_pedido_retirado_info, id_evento, id_pedido_evento, id_pedido_produto, retirado) VALUES ' . implode(',', $salvar) . ' ON DUPLICATE KEY UPDATE id_pedido_retirado = VALUES(id_pedido_retirado)');
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = 'Sincronização efetuada - Retiradas - Evento ' . $idEvento;
+        } else {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhuma informação para ser sincronizada';
         }
 
-        return 'sincronizar retiradas - ' . $intIdEvento;
+
+        return $arrRetorno;
     }
 
-    static function sincronizarRetiradaInfoEvento($intIdEvento) {
+    static function sincronizarRetiradaInfoEvento() {
 
         $arrDados = app('request')->input('dados');
+        $idEvento = app('request')->input('id_evento');
 
-        foreach ($arrDados as $name => $value) {
-            $salvar[] = '("' . $value['cod_retirado_info'] . '", "' . $value['cod_funcionario'] . '", "' . $value['id_pedido'] . '", "' . intval($value['eh_comprador'] > 0) ? 1 : 0 . '", "' . $value['nome'] . '", "' . $value['telefone'] . '", "' . $value['obs'] . '", "' . $value['dt_alterado'] . '")';
-        }
+        if ($arrDados) {
+            foreach ($arrDados as $name => $value) {
+                $ehComprador = (isset($value['eh_comprador']) && $value['eh_comprador'] > 0) ? 1 : 0;
+                $nome = (isset($value['nome'])) ? $value['nome'] : '';
+                $telefone = (isset($value['telefone'])) ? $value['telefone'] : '';
+                $obs = (isset($value['obs'])) ? $value['obs'] : '';
 
-        echo 'INSERT INTO sa_pedido_retirado_info (id_pedido_retirado_info, id_pedido_retirado_funcionario, id_pedido, comprador_retirou, nome, telefone, obs, dt_retirado) 
-                    VALUES ' . implode(',', $salvar) . ' ON DUPLICATE KEY UPDATE id_pedido_retirado_info = VALUES(id_pedido_retirado_info)';
-        var_dump($salvar);
-        die();
+                $salvar[] = '("' . $value['cod_retirado_info'] . '", "' . $value['cod_funcionario'] . '", "' . $value['id_pedido'] . '", "' . $ehComprador . '", "' . $nome . '", "' . $telefone . '", "' . $obs . '", "' . $value['dt_alterado'] . '")';
+            }
 
-        DB::query('INSERT INTO sa_pedido_retirado_info (id_pedido_retirado_info, id_pedido_retirado_funcionario, id_pedido, comprador_retirou, nome, telefone, obs, dt_retirado) 
+            DB::insert('INSERT INTO sa_pedido_retirado_info (id_pedido_retirado_info, id_pedido_retirado_funcionario, id_pedido, comprador_retirou, nome, telefone, obs, dt_retirado) 
                     VALUES ' . implode(',', $salvar) . ' ON DUPLICATE KEY UPDATE id_pedido_retirado_info = VALUES(id_pedido_retirado_info)');
 
-        return 'sincronizar retiradas info - ' . $intIdEvento;
-    }
-
-    static function sincronizarInscricoesEvento($intIdEvento) {
-
-        $arrDados = app('request')->input('dados');
-
-        foreach ($arrDados as $name => $value) {
-            DB::query('UPDATE sa_pedido_evento SET id_modalidade = ' . $value['id_modalidade'] . ', id_categoria = ' . $value['id_categoria'] . ', nr_peito = ' . $value['nm_peito'] . ' WHERE id_pedido_evento = ' . $value['cod_inscritos']);
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = 'Sincronização efetuada - Retiradas Info - Evento ' . $idEvento;
+        } else {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhuma informação para ser sincronizada';
         }
-        return 'sincronizar inscrições - ' . $intIdEvento;
+
+        return $arrRetorno;
     }
 
-    static function sincronizarNovasInscricoesEvento($intIdEvento) {
+    static function sincronizarInscricoesEvento() {
 
         $arrDados = app('request')->input('dados');
+        $idEvento = app('request')->input('id_evento');
 
-        foreach ($arrDados as $name => $value) {
+        if ($arrDados) {
+            foreach ($arrDados as $name => $value) {
+                DB::update('UPDATE sa_pedido_evento SET id_modalidade = ' . $value['id_modalidade'] . ', id_categoria = ' . $value['id_categoria'] . ', nr_peito = ' . $value['nm_peito'] . ' WHERE id_pedido_evento = ' . $value['cod_inscritos']);
+            }
 
-            var_dump($value);
-            die();
-            $idCodigoNovo = "RETI-" . $value['cod_inscritos_novo'];
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = 'Sincronização efetuada - Inscrições - Evento ' . $idEvento;
+        } else {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhuma informação para ser sincronizada';
+        }
 
-            // verificando se já existe um pedido pagamento para essa nova inscrição
-            $boolPedidoPagamento = self::buscarPedidoPagamento($idCodigoNovaInscricao);
-            var_dump($boolPedidoPagamento);
-            die();
-            // Verificar se já existe esta inscrição
-            if (!$boolPedidoPagamento) {
+        return $arrRetorno;
+    }
 
-                // Procurar Usuario Pelo Email
-                $objUsuario = self::buscarPorEmail($value['email']);
+    static function sincronizarNovasInscricoesEvento() {
 
-                var_dump($objUsuario);
-                die();
+        $arrDados = app('request')->input('dados');
+        $idEvento = app('request')->input('id_evento');
 
-                // verificando se o usuário existe no banco, se não existir é criado um novo usuário
-                if (!$objUsuario) {
-                    $idUsuario = self::salvarUsuario(array(
-                                'cod_funcionario' => $value['cod_funcionario'],
-                                'nome_completo' => $value['nome_completo'],
-                                'email' => $value['email'],
-                                'h_tipo_cpf' => $value['h_tipo_cpf'],
-                                'v_nr_documento' => $value['v_nr_documento'],
-                                'nascimento' => date('Y-m-d', strtotime($value['nascimento3'] . '-' . $value['nascimento2'] . '-' . $value['nascimento1'])),
-                                'genero' => $value['genero'],
-                                'id_cidade' => $value['id_cidade'],
-                                'telefone' => $value['telefone'],
-                                'celular' => $value['celular'],
-                                'nm_necessidades_especiais' => $value['nm_necessidades_especiais'],
-                                'equipe' => $value['equipe'],
+        if ($arrDados) {
+            foreach ($arrDados as $name => $value) {
+
+                $idCodigoNovaInscricao = "RETI-" . $value['cod_inscritos_novo'];
+
+                // verificando se já existe um pedido pagamento para essa nova inscrição
+                $boolPedidoPagamento = self::buscarPedidoPagamento($idCodigoNovaInscricao);
+
+                // Verificar se já existe esta inscrição
+                if (!$boolPedidoPagamento) {
+
+                    // Procurar Usuario Pelo Email
+                    $objUsuario = self::buscarUsuarioPorEmail($value['email']);
+
+                    // verificando se o usuário existe no banco, se não existir é criado um novo usuário
+                    if (!$objUsuario) {
+                        $idUsuario = self::salvarUsuario(array(
+                                    'cod_funcionario' => $value['cod_funcionario'],
+                                    'nome_completo' => $value['nome_completo'],
+                                    'email' => $value['email'],
+                                    'h_tipo_cpf' => $value['h_tipo_cpf'],
+                                    'v_nr_documento' => $value['v_nr_documento'],
+                                    'nascimento' => date('Y-m-d', strtotime($value['nascimento3'] . '-' . $value['nascimento2'] . '-' . $value['nascimento1'])),
+                                    'genero' => $value['genero'],
+                                    'id_cidade' => $value['id_cidade'],
+                                    'telefone' => $value['telefone'],
+                                    'celular' => $value['celular'],
+                                    'nm_necessidades_especiais' => $value['necessidades'],
+                                    'equipe' => $value['equipe'],
+                                    'dt_alterado' => $value['dt_alterado']
+                        ));
+                    } else {
+                        $idUsuario = $objUsuario->id_usuario;
+                    }
+
+
+
+                    // salvando o pedido
+                    $idPedido = self::salvarPedido(array(
+                                'id_usuario' => $idUsuario,
+                                'nm_preco' => $value['nm_preco'],
                                 'dt_alterado' => $value['dt_alterado']
                     ));
+
+                    // salvando o pedido evento
+                    $idPedidoEvento = self::salvarPedidoEvento(array(
+                                'id_pedido' => $idPedido,
+                                'id_evento' => $value['id_evento'],
+                                'id_modalidade' => $value['modalidade'],
+                                'id_categoria' => $value['categoria'],
+                                'id_usuario' => $idUsuario,
+                                'id_camiseta' => $value['camiseta'],
+                                'nr_peito' => $value['nm_peito'],
+                                'nr_preco' => $value['nm_preco'],
+                                'dt_cadastro' => $value['dt_alterado']
+                    ));
+
+                    // salvando o pedido pagamento
+                    $idPedidoPagamento = self::salvarPedidoPagamento(array(
+                                'id_pedido' => $idPedido,
+                                'id_usuario' => $idUsuario,
+                                'forma_pagamento' => $value['camiseta'],
+                                'nr_preco' => $value['nm_preco'],
+                                'dt_alterado' => $value['dt_alterado'],
+                                'cod_inscricao' => $idCodigoNovaInscricao
+                    ));
+                }
+            }
+
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = 'Sincronização efetuada - Novas Inscrições - Evento ' . $idEvento;
+        } else {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhuma informação para ser sincronizada';
+        }
+
+        return $arrRetorno;
+    }
+
+    static function sincronizarUsuariosEvento() {
+        $arrDados = app('request')->input('dados');
+        $idEvento = app('request')->input('id_evento');
+
+
+        if ($arrDados) {
+            foreach ($arrDados as $name => $value) {
+
+                if ($value['id_pedido_evento']) {
+                    // busco o pedido evento
+                    $objPedidoEvento = self::buscarPedidoEvento($value['id_pedido_evento']);
+
+                    // verificando qual tipo de usuário é o pedido
+                    if ($objPedidoEvento->id_usuario_balcao > 0) {
+
+                        // busco o usuário com o e-mail informado e o id usuário do evento
+                        $objUsuarioBalcao = self::buscarUsuarioBalcaoPorEmail($value['email'], $objPedidoEvento->id_usuario);
+                        if (!$objUsuarioBalcao) {
+                            $idUsuarioBalcao = self::salvarUsuarioBalcao(array(
+                                        'nome' => $value['nome'],
+                                        'email' => $value['email'],
+                                        'tipo_documento' => 1,
+                                        'documento' => $value['documento'],
+                                        'nascimento' => $value['dtnascimento'],
+                                        'genero' => $value['genero'],
+                                        'telefone' => $value['telefone'],
+                                        'celular' => $value['celular'],
+                                        'cadastro' => $value['dt_alterado'],
+                                        'id_usuario_adm' => $objUsuarioBalcao->id_usuario
+                            ));
+                        } else {
+                            $idUsuarioBalcao = $objUsuarioBalcao->id_usuario;
+                        }
+
+                        // atualizando pedidoEvento
+                        self::updateUsuarioPedidoEvento($idUsuarioBalcao, $objPedidoEvento->id_pedido_evento);
+                    } else {
+                        // busco o usuário com o e-mail informado e o id usuário do evento
+                        $objUsuario = self::buscarUsuarioPorEmail($value['email']);
+                        if (!$objUsuario) {
+                            $idUsuario = self::salvarUsuario(array(
+                                        'cod_funcionario' => 1,
+                                        'nome_completo' => $value['nome'],
+                                        'email' => $value['email'],
+                                        'h_tipo_cpf' => 1,
+                                        'v_nr_documento' => $value['documento'],
+                                        'nascimento' => $value['dtnascimento'],
+                                        'genero' => $value['genero'],
+                                        'id_cidade' => '',
+                                        'telefone' => $value['telefone'],
+                                        'celular' => $value['celular'],
+                                        'nm_necessidades_especiais' => $value['necessidades'],
+                                        'equipe' => $value['equipe'],
+                                        'dt_alterado' => $value['dt_alterado']
+                            ));
+                        } else {
+                            $idUsuario = $objUsuario->id_usuario;
+                        }
+
+                        // atualizando pedidoEvento
+                        self::updateUsuarioPedidoEvento($idUsuario, $objPedidoEvento->id_pedido_evento);
+
+                        // carrego o objeto pedido
+                        $objPedido = self::buscarPedido($objPedidoEvento->id_pedido);
+
+                        // verifico se o dono do pedido é diferente do usuário atual para adicionar como amigo
+                        if ($objPedido->id_usuario != $idUsuario) {
+                            // verificando se é usuario amigo
+                            $objUsuarioAmigo = self::buscarUsuarioAmigo($objPedido->id_usuario, $idUsuario);
+
+                            // salvando o resgistro de usuário amigo
+                            if (!$objUsuarioAmigo) {
+                                self::salvarUsuarioAmigo(array(
+                                    'id_usuario' => $objPedido->id_usuario,
+                                    'id_usuario_amigo' => $idUsuario
+                                ));
+                            }
+                        }
+                    }
+
+                    // update de usuários que não tem inscrição
                 } else {
-                    $idUsuario = $objUsuario->id_usuario;
+                    // se for usuário balcão
+                    if ($value['fl_balcao'] == 1) {
+                        $arrDadosUsuarioBalcao = self::updateUsuarioTable('sa_usuario_balcao', array(
+                                    'ds_nome' => $value['nome'],
+                                    'ds_celular' => $value['celular'],
+                                    'ds_telefone' => $value['telefone'],
+                                    'dt_nascimento' => $value['dtnascimento']
+                                        )
+                                        , $value['cod_usuario']);
+                    } else {
+                        $pos_espaco = strpos($value['nome'], ' ');
+                        $arrDados = array(
+                            'ds_nome' => trim(substr($value['nome'], 0, $pos_espaco)),
+                            'ds_sobrenome' => trim(substr($value['nome'], $pos_espaco + 1, strlen($value['nome']))),
+                            'ds_celular' => $value['celular'],
+                            'ds_telefone' => $value['telefone'],
+                            'dt_nascimento' => $value['dtnascimento']);
+                        self::updateUsuarioTable('sa_usuario', $arrDados, $value['cod_usuario']);
+                    }
                 }
 
-                // salvando o pedido
-                $idPedido = self::salvarPedido(array(
-                            'id_usuario' => $idUsuario,
-                            'nm_preco' => $value['nm_preco'],
-                            'dt_alterado' => $value['dt_alterado']
-                ));
-
-                // salvando o pedido evento
-                $idPedidoEvento = self::salvarPedidoEvento(array(
-                            'id_pedido' => $idPedido,
-                            'id_evento' => $value['id_evento'],
-                            'id_modalidade' => $value['modalidade'],
-                            'id_categoria' => $value['categoria'],
-                            'id_usuario' => $idUsuario,
-                            'id_camiseta' => $value['camiseta'],
-                            'nr_peito' => $value['nm_peito'],
-                            'nr_preco' => $value['nm_preco'],
-                            'dt_cadastro' => $value['dt_alterado']
-                ));
-
-                // salvando o pedido pagamento
-                $idPedidoPagamento = self::salvarPedidoPagamento(array(
-                            'id_pedido' => $idPedido,
-                            'id_usuario' => $idUsuario,
-                            'forma_pagamento' => $value['camiseta'],
-                            'nr_preco' => $value['nm_preco'],
-                            'dt_alterado' => $value['dt_alterado'],
-                            'cod_inscricao' => $idCodigoNovaInscricao
-                ));
+                $arrRetorno['status'] = 'ok';
+                $arrRetorno['dados'] = 'Sincronização efetuada - Usuários - Evento ' . $idEvento;
             }
+        } else {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhuma informação para ser sincronizada';
         }
 
-
-        return 'sincronizar novas inscrições - ' . $intIdEvento;
+        return $arrRetorno;
     }
 
-    static function sincronizarUsuariosEvento($intIdEvento) {
-        return 'sincronizar usuários - ' . $intIdEvento;
-    }
+    static function sincronizarFuncionariosEvento() {
+        $arrDados = app('request')->input('dados');
+        $idEvento = app('request')->input('id_evento');
 
-    static function sincronizarFuncionariosEvento($intIdEvento) {
+        if ($arrDados) {
+            foreach ($arrDados as $name => $value) {
+                $salvar[] = '(' . $value['cod_funcionario'] . ', "' . $value['nome'] . '"' . ')';
+            }
 
-        foreach ($funcionario as $name => $value) {
-            $salvar[] = '(' . $value['cod_funcionario'] . ', "' . $value['nome'] . '"' . ')';
+            DB::insert('INSERT IGNORE INTO sa_pedido_retirado_funcionario (id_pedido_retirado_funcionario, nome) VALUES ' . implode(',', $salvar));
+
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = 'Sincronização efetuada - Funcionários - Evento ' . $idEvento;
+        } else {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhuma informação para ser sincronizada';
         }
 
-        echo 'INSERT IGNORE INTO sa_pedido_retirado_funcionario (id_pedido_retirado_funcionario, nome) VALUES ' . implode(',', $salvar);
-        var_dump($salvar);
-        die();
-
-        DB::query('INSERT IGNORE INTO sa_pedido_retirado_funcionario (id_pedido_retirado_funcionario, nome) VALUES ' . implode(',', $salvar));
-
-        return 'sincronizar funcionários - ' . $intIdEvento;
+        return $arrRetorno;
     }
 
     /* metodos de suporte para a api */
 
     static function salvarUsuario($arrDados) {
 
+        $pos_espaco = strpos($arrDados['nome_completo'], ' ');
+
         $arrDadosUsuario = array('id_tipo_usuario' => 5,
             'ds_nome_contato' => $arrDados['cod_funcionario'],
-            'ds_nome' => $arrDados['nome_completo'],
+            'ds_nome' => trim(substr($arrDados['nome_completo'], 0, $pos_espaco)),
+            'ds_sobrenome' => trim(substr($arrDados['nome_completo'], $pos_espaco + 1, strlen($arrDados['nome_completo']))),
             'ds_email' => $arrDados['email'],
             'id_tipo_documento' => $arrDados['h_tipo_cpf'],
             'nr_documento' => $arrDados['v_nr_documento'],
@@ -330,6 +475,33 @@ class Retirada {
         );
 
         return DB::table('sa_usuario')->insertGetId($arrDadosUsuario);
+    }
+
+    static function salvarUsuarioBalcao($arrDados) {
+
+        $arrDadosUsuario = array(
+            'ds_nome' => $arrDados['nome'],
+            'ds_email' => $arrDados['email'],
+            'id_tipo_documento' => $arrDados['tipo_documento'],
+            'nr_documento' => $arrDados['documento'],
+            'dt_nascimento' => $arrDados['nascimento'],
+            'fl_sexo' => $arrDados['genero'],
+            'ds_telefone' => $arrDados['telefone'],
+            'ds_celular' => $arrDados['celular'],
+            'dt_cadastro' => $arrDados['cadastro'],
+            'id_usuario_adm' => $arrDados['id_usuario_adm']
+        );
+
+        return DB::table('sa_usuario_balcao')->insertGetId($arrDadosUsuario);
+    }
+
+    static function salvarUsuarioAmigo($arrDados) {
+        $arrDadosUsuarioAmigo = array(
+            'id_usuario' => $arrDados['id_usuario'],
+            'id_usuario_amigo' => $arrDados['id_usuario_amigo']
+        );
+
+        return DB::table('sa_usuario_amigo')->insertGetId($arrDadosUsuarioAmigo);
     }
 
     static function salvarPedido($arrDados) {
@@ -354,14 +526,14 @@ class Retirada {
             'id_categoria' => $arrDados['id_categoria'],
             'id_usuario' => $arrDados['id_usuario'],
             'id_tamanho_camiseta' => $arrDados['id_camiseta'],
-            'nr_peito' => $arrDados['nm_peito'],
+            'nr_peito' => $arrDados['nr_peito'],
             'fl_amigo' => 1,
             'nm_qtd' => 1,
-            'nr_preco' => $arrDados['nm_preco'],
-            'dt_cadastro' => $arrDados['dt_alterado']
+            'nr_preco' => $arrDados['nr_preco'],
+            'dt_cadastro' => $arrDados['dt_cadastro']
         );
 
-        return DB::table('sa_pedido_evento')->insertGetId($arrDadosPedido);
+        return DB::table('sa_pedido_evento')->insertGetId($arrDadosPedidoEvento);
     }
 
     static function salvarPedidoPagamento($arrDados) {
@@ -380,12 +552,11 @@ class Retirada {
                 $idFormaPagamento = 18;
         }
 
-
         $arrDadosPedidoPagamento = array('id_pedido' => $arrDados['id_pedido'],
             'id_usuario' => $arrDados['id_usuario'],
             'id_formas_pagamento' => $idFormaPagamento,
-            'nr_valor' => $arrDados['nm_preco'],
-            'nr_valor_pago' => $arrDados['nm_preco'],
+            'nr_valor' => $arrDados['nr_preco'],
+            'nr_valor_pago' => $arrDados['nr_preco'],
             'dt_registro' => $arrDados['dt_alterado'],
             'dt_pagamento' => $arrDados['dt_alterado'],
             'txt_resultado' => $arrDados['cod_inscricao'],
@@ -396,12 +567,37 @@ class Retirada {
         return DB::table('sa_pedido_pagamento')->insertGetId($arrDadosPedidoPagamento);
     }
 
-    static function buscarPorEmail($strEmail) {
+    static function buscarUsuarioPorEmail($strEmail) {
         return DB::table('sa_usuario')->where('ds_email', $strEmail)->first();
+        // return DB::table('sa_usuario')->WhereRaw('MATCH ds_email AGAINST (\'"' . $strEmail . '"\')')->first();
+    }
+
+    static function buscarUsuarioBalcaoPorEmail($strEmail, $idUsuario) {
+        return DB::table('sa_usuario_balcao')->where('ds_email', $strEmail)->where('id_usuario_adm', $idUsuario)->first();
+    }
+
+    static function buscarUsuarioAmigo($idUsuario, $idAmigo) {
+        return DB::table('sa_usuario_amigo')->where('id_usuario', $idAmigo)->where('id_usuario_amigo', $idUsuario)->first();
+    }
+
+    static function buscarPedido($idPedido) {
+        return DB::table('sa_pedido')->where('id_pedido', $idPedido)->first();
+    }
+
+    static function buscarPedidoEvento($idPedidoEvento) {
+        return DB::table('sa_pedido_evento')->where('id_pedido_evento', $idPedidoEvento)->first();
     }
 
     static function buscarPedidoPagamento($info) {
-        return DB::table('sa_pedido_pagamento')->where('txt_resultado', $info)->first();
+        return DB::table('sa_pedido_pagamento')->WhereRaw('MATCH txt_resultado AGAINST (\'"' . $info . '"\')')->first();
+    }
+
+    static function updateUsuarioPedidoEvento($idUsuario, $idPedidoEvento) {
+        return DB::update('UPDATE sa_pedido_evento SET id_usuario = "' . $idUsuario . '" WHERE id_pedido_evento = ' . $idPedidoEvento);
+    }
+
+    static function updateUsuarioTable($table, $arrDados, $idUsuario) {
+        return DB::table($table)->where('id_usuario', $idUsuario)->update($arrDados);
     }
 
 }

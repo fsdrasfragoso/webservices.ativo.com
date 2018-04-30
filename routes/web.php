@@ -89,17 +89,17 @@ $app->group(['prefix' => 'br'], function () use ($app) {
 
 
         /* fluxo de sincronização */
-        $app->post('sincronizar/retiradas/{id_evento:[0-9]+}', 'RetiradaController@sincronizarRetiradaEvento');
+        $app->post('sincronizar/retiradas', 'RetiradaController@sincronizarRetiradaEvento');
 
-        $app->post('sincronizar/retiradas-info/{id_evento:[0-9]+}', 'RetiradaController@sincronizarRetiradaInfoEvento');
+        $app->post('sincronizar/retiradas-info', 'RetiradaController@sincronizarRetiradaInfoEvento');
 
-        $app->post('sincronizar/inscricoes/{id_evento:[0-9]+}', 'RetiradaController@sincronizarInscricoesEvento');
+        $app->post('sincronizar/inscricoes', 'RetiradaController@sincronizarInscricoesEvento');
 
-        $app->post('sincronizar/novas-inscricoes/{id_evento:[0-9]+}', 'RetiradaController@sincronizarNovasInscricoesEvento');
+        $app->post('sincronizar/novas-inscricoes', 'RetiradaController@sincronizarNovasInscricoesEvento');
 
-        $app->post('sincronizar/usuarios/{id_evento:[0-9]+}', 'RetiradaController@sincronizarUsuariosEvento');
+        $app->post('sincronizar/usuarios', 'RetiradaController@sincronizarUsuariosEvento');
 
-        $app->post('sincronizar/funcionarios/{id_evento:[0-9]+}', 'RetiradaController@sincronizarFuncionariosEvento');
+        $app->post('sincronizar/funcionarios', 'RetiradaController@sincronizarFuncionariosEvento');
     });
 });
 

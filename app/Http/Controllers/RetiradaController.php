@@ -91,33 +91,33 @@ class RetiradaController {
       @param intIdEvento - Id do Evento para atualizar os dados
      */
 
-    function sincronizarRetiradaEvento($intIdEvento) {
-        $arrDados = Retirada::sincronizarRetiradaEvento($intIdEvento);
+    function sincronizarRetiradaEvento() {
+        $arrDados = Retirada::sincronizarRetiradaEvento();
         return response()->json($arrDados);
     }
 
-    function sincronizarRetiradaInfoEvento($intIdEvento) {
-        $arrDados = Retirada::sincronizarRetiradaInfoEvento($intIdEvento);
+    function sincronizarRetiradaInfoEvento() {
+        $arrDados = Retirada::sincronizarRetiradaInfoEvento();
         return response()->json($arrDados);
     }
 
-    function sincronizarInscricoesEvento($intIdEvento) {
-        $arrDados = Retirada::sincronizarInscricoesEvento($intIdEvento);
+    function sincronizarInscricoesEvento() {
+        $arrDados = Retirada::sincronizarInscricoesEvento();
         return response()->json($arrDados);
     }
 
-    function sincronizarNovasInscricoesEvento($intIdEvento) {
-        $arrDados = Retirada::sincronizarNovasInscricoesEvento($intIdEvento);
+    function sincronizarNovasInscricoesEvento() {
+        $arrDados = Retirada::sincronizarNovasInscricoesEvento();
         return response()->json($arrDados);
     }
 
-    function sincronizarUsuariosEvento($intIdEvento) {
-        $arrDados = Retirada::sincronizarUsuariosEvento($intIdEvento);
+    function sincronizarUsuariosEvento() {
+        $arrDados = Retirada::sincronizarUsuariosEvento();
         return response()->json($arrDados);
     }
 
-    function sincronizarFuncionariosEvento($intIdEvento) {
-        $arrDados = Retirada::sincronizarFuncionariosEvento($intIdEvento);
+    function sincronizarFuncionariosEvento() {
+        $arrDados = Retirada::sincronizarFuncionariosEvento();
         return response()->json($arrDados);
     }
 
