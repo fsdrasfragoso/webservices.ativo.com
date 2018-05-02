@@ -57,4 +57,9 @@ class UsuarioController {
         return response()->json($arrDados);
     }
 
+    function buscarPorEmail($strEmail) {
+        $arrDados = Usuario::buscarPorEmail($strEmail);
+        return response()->json($arrDados);
+    }
+
 }

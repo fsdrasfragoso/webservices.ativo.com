@@ -87,7 +87,19 @@ $app->group(['prefix' => 'br'], function () use ($app) {
 
         $app->get('camisetas-evento/{id_evento:[0-9]+}', 'RetiradaController@camisetasEvento');
 
-        $app->post('sincronizar/{id_evento:[0-9]+}', 'RetiradaController@sincrozinarEvento');
+
+        /* fluxo de sincronização */
+        $app->post('sincronizar/retiradas', 'RetiradaController@sincronizarRetiradaEvento');
+
+        $app->post('sincronizar/retiradas-info', 'RetiradaController@sincronizarRetiradaInfoEvento');
+
+        $app->post('sincronizar/inscricoes', 'RetiradaController@sincronizarInscricoesEvento');
+
+        $app->post('sincronizar/novas-inscricoes', 'RetiradaController@sincronizarNovasInscricoesEvento');
+
+        $app->post('sincronizar/usuarios', 'RetiradaController@sincronizarUsuariosEvento');
+
+        $app->post('sincronizar/funcionarios', 'RetiradaController@sincronizarFuncionariosEvento');
     });
 });
 

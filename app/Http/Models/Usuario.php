@@ -30,4 +30,5 @@ class Usuario {
         return $arrRetorno;
     }
 
+
 }
