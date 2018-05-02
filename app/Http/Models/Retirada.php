@@ -243,7 +243,7 @@ class Retirada {
                 // verificando se já existe um pedido pagamento para essa nova inscrição
                 $boolPedidoPagamento = self::buscarPedidoPagamento($idCodigoNovaInscricao);
 
-                // Verificar se já existe esta inscrição
+                // Verificar não existe esta inscrição
                 if (!$boolPedidoPagamento) {
 
                     // Procurar Usuario Pelo Email
@@ -270,8 +270,7 @@ class Retirada {
                         $idUsuario = $objUsuario->id_usuario;
                     }
 
-
-
+                    
                     // salvando o pedido
                     $idPedido = self::salvarPedido(array(
                                 'id_usuario' => $idUsuario,
@@ -392,6 +391,7 @@ class Retirada {
                                 ));
                             }
                         }
+                        
                     }
 
                     // update de usuários que não tem inscrição
