@@ -232,6 +232,13 @@ class Retirada {
 
     static function sincronizarNovasInscricoesEvento() {
 
+        $arrRetorno['status'] = 'ok';
+        $arrRetorno['dados'] = 'Sincronização efetuada - Novas Inscrições - Evento ' . $idEvento;
+
+        return $arrRetorno;
+        // ajustes
+
+
         $arrDados = app('request')->input('dados');
         $idEvento = app('request')->input('id_evento');
 
@@ -270,7 +277,7 @@ class Retirada {
                         $idUsuario = $objUsuario->id_usuario;
                     }
 
-                    
+
                     // salvando o pedido
                     $idPedido = self::salvarPedido(array(
                                 'id_usuario' => $idUsuario,
@@ -314,6 +321,7 @@ class Retirada {
     }
 
     static function sincronizarUsuariosEvento() {
+
         $arrDados = app('request')->input('dados');
         $idEvento = app('request')->input('id_evento');
 
@@ -391,7 +399,6 @@ class Retirada {
                                 ));
                             }
                         }
-                        
                     }
 
                     // update de usuários que não tem inscrição
