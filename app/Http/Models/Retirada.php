@@ -194,7 +194,7 @@ class Retirada {
                 $telefone = (isset($value['telefone'])) ? $value['telefone'] : '';
                 $obs = (isset($value['obs'])) ? $value['obs'] : '';
 
-                $salvar[] = '("' . $value['cod_retirado_info'] . '", "' . $value['cod_funcionario'] . '", "' . $value['id_pedido'] . '", "' . $ehComprador . '", "' . $nome . '", "' . $telefone . '", "' . $obs . '", "' . $value['dt_alterado'] . '")';
+                $salvar[] = '("' . $value['cod_retirado_info'] . '", "1", "' . $value['id_pedido'] . '", "' . $ehComprador . '", "' . $nome . '", "' . $telefone . '", "' . $obs . '", "' . $value['dt_alterado'] . '")';
             }
 
             DB::insert('INSERT INTO sa_pedido_retirado_info (id_pedido_retirado_info, id_pedido_retirado_funcionario, id_pedido, comprador_retirou, nome, telefone, obs, dt_retirado) 
@@ -231,6 +231,13 @@ class Retirada {
     }
 
     static function sincronizarNovasInscricoesEvento() {
+
+        $arrRetorno['status'] = 'ok';
+        $arrRetorno['dados'] = 'Sincronização efetuada - Novas Inscrições - Evento ' . $idEvento;
+
+        return $arrRetorno;
+        // ajustes
+
 
         $arrDados = app('request')->input('dados');
         $idEvento = app('request')->input('id_evento');
@@ -270,7 +277,7 @@ class Retirada {
                         $idUsuario = $objUsuario->id_usuario;
                     }
 
-                    
+
                     // salvando o pedido
                     $idPedido = self::salvarPedido(array(
                                 'id_usuario' => $idUsuario,
@@ -314,6 +321,7 @@ class Retirada {
     }
 
     static function sincronizarUsuariosEvento() {
+
         $arrDados = app('request')->input('dados');
         $idEvento = app('request')->input('id_evento');
 
@@ -330,6 +338,7 @@ class Retirada {
 
                         // busco o usuário com o e-mail informado e o id usuário do evento
                         $objUsuarioBalcao = self::buscarUsuarioBalcaoPorEmail($value['email'], $objPedidoEvento->id_usuario);
+
                         if (!$objUsuarioBalcao) {
                             $idUsuarioBalcao = self::salvarUsuarioBalcao(array(
                                         'nome' => $value['nome'],
@@ -341,7 +350,7 @@ class Retirada {
                                         'telefone' => $value['telefone'],
                                         'celular' => $value['celular'],
                                         'cadastro' => $value['dt_alterado'],
-                                        'id_usuario_adm' => $objUsuarioBalcao->id_usuario
+                                        'id_usuario_adm' => $objPedidoEvento->id_usuario
                             ));
                         } else {
                             $idUsuarioBalcao = $objUsuarioBalcao->id_usuario;
@@ -391,7 +400,6 @@ class Retirada {
                                 ));
                             }
                         }
-                        
                     }
 
                     // update de usuários que não tem inscrição
@@ -416,10 +424,9 @@ class Retirada {
                         self::updateUsuarioTable('sa_usuario', $arrDados, $value['cod_usuario']);
                     }
                 }
-
-                $arrRetorno['status'] = 'ok';
-                $arrRetorno['dados'] = 'Sincronização efetuada - Usuários - Evento ' . $idEvento;
             }
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = 'Sincronização efetuada - Usuários - Evento ' . $idEvento;
         } else {
             $arrRetorno['status'] = 'error';
             $arrRetorno['dados'] = 'Nenhuma informação para ser sincronizada';
@@ -461,7 +468,7 @@ class Retirada {
             'ds_sobrenome' => trim(substr($arrDados['nome_completo'], $pos_espaco + 1, strlen($arrDados['nome_completo']))),
             'ds_email' => $arrDados['email'],
             'id_tipo_documento' => $arrDados['h_tipo_cpf'],
-            'nr_documento' => $arrDados['v_nr_documento'],
+            'nr_documento' => str_replace(array('-', '.'), '', $arrDados['v_nr_documento']),
             'dt_nascimento' => $arrDados['nascimento'],
             'fl_sexo' => $arrDados['genero'],
             'id_cidade' => $arrDados['id_cidade'],
@@ -483,7 +490,7 @@ class Retirada {
             'ds_nome' => $arrDados['nome'],
             'ds_email' => $arrDados['email'],
             'id_tipo_documento' => $arrDados['tipo_documento'],
-            'nr_documento' => $arrDados['documento'],
+            'nr_documento' => str_replace(array('-', '.'), '', $arrDados['documento']),
             'dt_nascimento' => $arrDados['nascimento'],
             'fl_sexo' => $arrDados['genero'],
             'ds_telefone' => $arrDados['telefone'],
