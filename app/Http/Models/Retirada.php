@@ -293,7 +293,7 @@ class Retirada {
                                 'id_categoria' => $value['categoria'],
                                 'id_usuario' => $idUsuario,
                                 'id_camiseta' => $value['camiseta'],
-                                'nr_peito' => $value['nm_peito'],
+                                'nr_peito' => isset($value['nm_peito']) ? $value['nm_peito'] : null,
                                 'nr_preco' => $value['nm_preco'],
                                 'dt_cadastro' => $value['dt_alterado']
                     ));
@@ -406,13 +406,13 @@ class Retirada {
                 } else {
                     // se for usuário balcão
                     if ($value['fl_balcao'] == 1) {
-                        $arrDadosUsuarioBalcao = self::updateUsuarioTable('sa_usuario_balcao', array(
-                                    'ds_nome' => $value['nome'],
-                                    'ds_celular' => $value['celular'],
-                                    'ds_telefone' => $value['telefone'],
-                                    'dt_nascimento' => $value['dtnascimento']
-                                        )
-                                        , $value['cod_usuario']);
+                        self::updateUsuarioTable('sa_usuario_balcao', array(
+                            'ds_nome' => $value['nome'],
+                            'ds_celular' => $value['celular'],
+                            'ds_telefone' => $value['telefone'],
+                            'dt_nascimento' => $value['dtnascimento']
+                                )
+                                , $value['cod_usuario']);
                     } else {
                         $pos_espaco = strpos($value['nome'], ' ');
                         $arrDados = array(
@@ -421,6 +421,7 @@ class Retirada {
                             'ds_celular' => $value['celular'],
                             'ds_telefone' => $value['telefone'],
                             'dt_nascimento' => $value['dtnascimento']);
+                        
                         self::updateUsuarioTable('sa_usuario', $arrDados, $value['cod_usuario']);
                     }
                 }
