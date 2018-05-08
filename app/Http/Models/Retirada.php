@@ -334,7 +334,7 @@ class Retirada {
                     $objPedidoEvento = self::buscarPedidoEvento($value['id_pedido_evento']);
 
                     // verificando qual tipo de usuário é o pedido
-                    if ($objPedidoEvento->id_usuario_balcao > 0) {
+                    if (isset($objPedidoEvento) && $objPedidoEvento->id_usuario_balcao > 0) {
 
                         // busco o usuário com o e-mail informado e o id usuário do evento
                         $objUsuarioBalcao = self::buscarUsuarioBalcaoPorEmail($value['email'], $objPedidoEvento->id_usuario);
