@@ -333,71 +333,74 @@ class Retirada {
                     // busco o pedido evento
                     $objPedidoEvento = self::buscarPedidoEvento($value['id_pedido_evento']);
 
-                    // verificando qual tipo de usuário é o pedido
-                    if (isset($objPedidoEvento) && $objPedidoEvento->id_usuario_balcao > 0) {
+                    // se o pedido evento for encontrado ele efetua o fluxo
+                    if ($objPedidoEvento) {
+                        // verificando qual tipo de usuário é o pedido
+                        if ($objPedidoEvento->id_usuario_balcao > 0) {
 
-                        // busco o usuário com o e-mail informado e o id usuário do evento
-                        $objUsuarioBalcao = self::buscarUsuarioBalcaoPorEmail($value['email'], $objPedidoEvento->id_usuario);
+                            // busco o usuário com o e-mail informado e o id usuário do evento
+                            $objUsuarioBalcao = self::buscarUsuarioBalcaoPorEmail($value['email'], $objPedidoEvento->id_usuario);
 
-                        if (!$objUsuarioBalcao) {
-                            $idUsuarioBalcao = self::salvarUsuarioBalcao(array(
-                                        'nome' => $value['nome'],
-                                        'email' => $value['email'],
-                                        'tipo_documento' => 1,
-                                        'documento' => $value['documento'],
-                                        'nascimento' => $value['dtnascimento'],
-                                        'genero' => $value['genero'],
-                                        'telefone' => $value['telefone'],
-                                        'celular' => $value['celular'],
-                                        'cadastro' => $value['dt_alterado'],
-                                        'id_usuario_adm' => $objPedidoEvento->id_usuario
-                            ));
-                        } else {
-                            $idUsuarioBalcao = $objUsuarioBalcao->id_usuario;
-                        }
-
-                        // atualizando pedidoEvento
-                        self::updateUsuarioPedidoEvento($idUsuarioBalcao, $objPedidoEvento->id_pedido_evento);
-                    } else {
-                        // busco o usuário com o e-mail informado e o id usuário do evento
-                        $objUsuario = self::buscarUsuarioPorEmail($value['email']);
-                        if (!$objUsuario) {
-                            $idUsuario = self::salvarUsuario(array(
-                                        'cod_funcionario' => 1,
-                                        'nome_completo' => $value['nome'],
-                                        'email' => $value['email'],
-                                        'h_tipo_cpf' => 1,
-                                        'v_nr_documento' => $value['documento'],
-                                        'nascimento' => $value['dtnascimento'],
-                                        'genero' => $value['genero'],
-                                        'id_cidade' => '',
-                                        'telefone' => $value['telefone'],
-                                        'celular' => $value['celular'],
-                                        'nm_necessidades_especiais' => $value['necessidades'],
-                                        'equipe' => $value['equipe'],
-                                        'dt_alterado' => $value['dt_alterado']
-                            ));
-                        } else {
-                            $idUsuario = $objUsuario->id_usuario;
-                        }
-
-                        // atualizando pedidoEvento
-                        self::updateUsuarioPedidoEvento($idUsuario, $objPedidoEvento->id_pedido_evento);
-
-                        // carrego o objeto pedido
-                        $objPedido = self::buscarPedido($objPedidoEvento->id_pedido);
-
-                        // verifico se o dono do pedido é diferente do usuário atual para adicionar como amigo
-                        if ($objPedido->id_usuario != $idUsuario) {
-                            // verificando se é usuario amigo
-                            $objUsuarioAmigo = self::buscarUsuarioAmigo($objPedido->id_usuario, $idUsuario);
-
-                            // salvando o resgistro de usuário amigo
-                            if (!$objUsuarioAmigo) {
-                                self::salvarUsuarioAmigo(array(
-                                    'id_usuario' => $objPedido->id_usuario,
-                                    'id_usuario_amigo' => $idUsuario
+                            if (!$objUsuarioBalcao) {
+                                $idUsuarioBalcao = self::salvarUsuarioBalcao(array(
+                                            'nome' => $value['nome'],
+                                            'email' => $value['email'],
+                                            'tipo_documento' => 1,
+                                            'documento' => $value['documento'],
+                                            'nascimento' => $value['dtnascimento'],
+                                            'genero' => $value['genero'],
+                                            'telefone' => $value['telefone'],
+                                            'celular' => $value['celular'],
+                                            'cadastro' => $value['dt_alterado'],
+                                            'id_usuario_adm' => $objPedidoEvento->id_usuario
                                 ));
+                            } else {
+                                $idUsuarioBalcao = $objUsuarioBalcao->id_usuario;
+                            }
+
+                            // atualizando pedidoEvento
+                            self::updateUsuarioPedidoEvento($idUsuarioBalcao, $objPedidoEvento->id_pedido_evento);
+                        } else {
+                            // busco o usuário com o e-mail informado e o id usuário do evento
+                            $objUsuario = self::buscarUsuarioPorEmail($value['email']);
+                            if (!$objUsuario) {
+                                $idUsuario = self::salvarUsuario(array(
+                                            'cod_funcionario' => 1,
+                                            'nome_completo' => $value['nome'],
+                                            'email' => $value['email'],
+                                            'h_tipo_cpf' => 1,
+                                            'v_nr_documento' => $value['documento'],
+                                            'nascimento' => $value['dtnascimento'],
+                                            'genero' => $value['genero'],
+                                            'id_cidade' => '',
+                                            'telefone' => $value['telefone'],
+                                            'celular' => $value['celular'],
+                                            'nm_necessidades_especiais' => $value['necessidades'],
+                                            'equipe' => $value['equipe'],
+                                            'dt_alterado' => $value['dt_alterado']
+                                ));
+                            } else {
+                                $idUsuario = $objUsuario->id_usuario;
+                            }
+
+                            // atualizando pedidoEvento
+                            self::updateUsuarioPedidoEvento($idUsuario, $objPedidoEvento->id_pedido_evento);
+
+                            // carrego o objeto pedido
+                            $objPedido = self::buscarPedido($objPedidoEvento->id_pedido);
+
+                            // verifico se o dono do pedido é diferente do usuário atual para adicionar como amigo
+                            if ($objPedido->id_usuario != $idUsuario) {
+                                // verificando se é usuario amigo
+                                $objUsuarioAmigo = self::buscarUsuarioAmigo($objPedido->id_usuario, $idUsuario);
+
+                                // salvando o resgistro de usuário amigo
+                                if (!$objUsuarioAmigo) {
+                                    self::salvarUsuarioAmigo(array(
+                                        'id_usuario' => $objPedido->id_usuario,
+                                        'id_usuario_amigo' => $idUsuario
+                                    ));
+                                }
                             }
                         }
                     }
@@ -421,7 +424,7 @@ class Retirada {
                             'ds_celular' => $value['celular'],
                             'ds_telefone' => $value['telefone'],
                             'dt_nascimento' => $value['dtnascimento']);
-                        
+
                         self::updateUsuarioTable('sa_usuario', $arrDados, $value['cod_usuario']);
                     }
                 }
