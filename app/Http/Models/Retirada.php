@@ -217,7 +217,8 @@ class Retirada {
 
         if ($arrDados) {
             foreach ($arrDados as $name => $value) {
-                DB::update('UPDATE sa_pedido_evento SET id_modalidade = ' . $value['id_modalidade'] . ', id_categoria = ' . $value['id_categoria'] . ', nr_peito = ' . $value['nm_peito'] . ' WHERE id_pedido_evento = ' . $value['cod_inscritos']);
+                $nr_peito = (isset($value['nm_peito']) && $value['nm_peito'] > 0) ? $value['nm_peito'] : null;
+                DB::update('UPDATE sa_pedido_evento SET id_modalidade = ' . $value['id_modalidade'] . ', id_categoria = ' . $value['id_categoria'] . ', nr_peito = ' . $nr_peito . ' WHERE id_pedido_evento = ' . $value['cod_inscritos']);
             }
 
             $arrRetorno['status'] = 'ok';
