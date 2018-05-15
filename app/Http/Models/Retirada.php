@@ -196,7 +196,7 @@ class Retirada {
 
                 $salvar[] = '("' . $value['cod_retirado_info'] . '", "1", "' . $value['id_pedido'] . '", "' . $ehComprador . '", "' . $nome . '", "' . $telefone . '", "' . $obs . '", "' . $value['dt_alterado'] . '")';
             }
-
+            
             DB::insert('INSERT INTO sa_pedido_retirado_info (id_pedido_retirado_info, id_pedido_retirado_funcionario, id_pedido, comprador_retirou, nome, telefone, obs, dt_retirado) 
                     VALUES ' . implode(',', $salvar) . ' ON DUPLICATE KEY UPDATE id_pedido_retirado_info = VALUES(id_pedido_retirado_info)');
 
@@ -234,15 +234,14 @@ class Retirada {
 
     static function sincronizarNovasInscricoesEvento() {
 
+        $arrDados = app('request')->input('dados');
+        $idEvento = app('request')->input('id_evento');
+
         $arrRetorno['status'] = 'ok';
         $arrRetorno['dados'] = 'Sincronização efetuada - Novas Inscrições - Evento ' . $idEvento;
 
         return $arrRetorno;
         // ajustes
-
-
-        $arrDados = app('request')->input('dados');
-        $idEvento = app('request')->input('id_evento');
 
         if ($arrDados) {
             foreach ($arrDados as $name => $value) {
