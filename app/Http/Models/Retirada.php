@@ -196,7 +196,7 @@ class Retirada {
 
                 $salvar[] = '("' . $value['cod_retirado_info'] . '", "1", "' . $value['id_pedido'] . '", "' . $ehComprador . '", "' . $nome . '", "' . $telefone . '", "' . $obs . '", "' . $value['dt_alterado'] . '")';
             }
-            
+
             DB::insert('INSERT INTO sa_pedido_retirado_info (id_pedido_retirado_info, id_pedido_retirado_funcionario, id_pedido, comprador_retirou, nome, telefone, obs, dt_retirado) 
                     VALUES ' . implode(',', $salvar) . ' ON DUPLICATE KEY UPDATE id_pedido_retirado_info = VALUES(id_pedido_retirado_info)');
 
@@ -237,10 +237,11 @@ class Retirada {
         $arrDados = app('request')->input('dados');
         $idEvento = app('request')->input('id_evento');
 
-        $arrRetorno['status'] = 'ok';
-        $arrRetorno['dados'] = 'Sincronização efetuada - Novas Inscrições - Evento ' . $idEvento;
 
-        return $arrRetorno;
+//        $arrRetorno['status'] = 'ok';
+//        $arrRetorno['dados'] = 'Sincronização efetuada - Novas Inscrições - Evento ' . $idEvento;
+//
+//        return $arrRetorno;
         // ajustes
 
         if ($arrDados) {
@@ -254,8 +255,8 @@ class Retirada {
                 // Verificar não existe esta inscrição
                 if (!$boolPedidoPagamento) {
 
-                    // Procurar Usuario Pelo Email
-                    $objUsuario = self::buscarUsuarioPorEmail($value['email']);
+                    // Procurar Usuario Pelo CPF
+                    $objUsuario = self::buscarUsuarioPorDocumento($value['v_nr_documento']);
 
                     // verificando se o usuário existe no banco, se não existir é criado um novo usuário
                     if (!$objUsuario) {
@@ -277,7 +278,6 @@ class Retirada {
                     } else {
                         $idUsuario = $objUsuario->id_usuario;
                     }
-
 
                     // salvando o pedido
                     $idPedido = self::salvarPedido(array(
@@ -582,6 +582,10 @@ class Retirada {
     static function buscarUsuarioPorEmail($strEmail) {
         return DB::table('sa_usuario')->where('ds_email', $strEmail)->first();
         // return DB::table('sa_usuario')->WhereRaw('MATCH ds_email AGAINST (\'"' . $strEmail . '"\')')->first();
+    }
+
+    static function buscarUsuarioPorDocumento($infoDocumento) {
+        return DB::table('sa_usuario')->where('nr_documento', $infoDocumento)->first();
     }
 
     static function buscarUsuarioBalcaoPorEmail($strEmail, $idUsuario) {
