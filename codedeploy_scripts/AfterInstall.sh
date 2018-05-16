@@ -8,6 +8,6 @@ rm -f /var/www/ativos/webservices.ativo.com_temp/appspec.yml
 mv /var/www/ativos/webservices.ativo.com_temp /var/www/ativos/webservices.ativo.com
 # Copia o arquivo de configuração do banco de dados
 [ -f /var/www/ativos/webservices.ativo.com_old/config/snappy.php ] && cp -prf /var/www/ativos/webservices.ativo.com_old/config/snappy.php /var/www/ativos/webservices.ativo.com/config/ || echo "Diretorio nao existe"
-[ -f /var/www/ativos/webservices.ativo.com_old/.env] && cp -prf /var/www/ativos/webservices.ativo.com_old/.env /var/www/ativos/webservices.ativo.com/ || echo "Arquivo não existe"
+[ -f /var/www/ativos/webservices.ativo.com_old/.env ] && cp -prf /var/www/ativos/webservices.ativo.com_old/.env /var/www/ativos/webservices.ativo.com/ || echo "Arquivo não existe"
 # Copia o arquivo .htaccess
 [ -f /var/www/ativos/webservices.ativo.com_old/public/.htaccess ] && cp -pf /var/www/ativos/webservices.ativo.com_old/public/.htaccess /var/www/ativos/webservices.ativo.com/public/ || echo "Arquivo nao existe"
