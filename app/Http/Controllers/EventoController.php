@@ -68,7 +68,17 @@ class EventoController {
     }
 
     function certificado($intIdEvento, $intIdNumPeito) {
-        $arrDados = Evento::certificado($intIdEvento, $intIdNumPeito);        
+        $arrDados = Evento::certificado($intIdEvento, $intIdNumPeito);
+        return response()->json($arrDados);
+    }
+
+    function mcDonaldsGeral() {
+        $arrDados = Evento::mcDonalds(null);
+        return response()->json($arrDados);
+    }
+
+    function mcDonaldsPorEvento($infoIdEvento) {
+        $arrDados = Evento::mcDonalds($infoIdEvento);
         return response()->json($arrDados);
     }
 
