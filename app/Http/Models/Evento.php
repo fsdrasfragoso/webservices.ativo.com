@@ -378,4 +378,31 @@ class Evento {
         }
     }
 
+    static function mcDonalds($infoIdEvento) {
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/mcdonalds/' . $infoIdEvento;
+
+        $arrIdEventosMcDonald = array(35240, 35241, 35242, 35243, 35244);
+
+        // validação dos eventos
+        if (!in_array($infoIdEvento, $arrIdEventosMcDonald) && $infoIdEvento != null) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Favor informar o ID do evento do McDonald\'s';
+        } else {
+            $infoIdEvento = ($infoIdEvento) ? $infoIdEvento : implode(',', $arrIdEventosMcDonald);
+            $infoLimit = (app('request')->input('limit') != '') ? app('request')->input('limit') : 100;
+            $infoOffSet = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
+            
+            $arrDadosDb = Caches::sql("CALL proc_webservice_mcdonalds('" . $infoIdEvento . "', " . $infoLimit . ", " . $infoOffSet . ")");
+
+            if ($arrDadosDb) {
+                $arrRetorno['status'] = 'ok';
+                $arrRetorno['dados'] = $arrDadosDb;
+            }
+        }
+
+
+        return $arrRetorno;
+    }
+
 }

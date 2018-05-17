@@ -44,6 +44,11 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('camisetas/{id_evento:[0-9]+}', 'EventoController@camisetas');
         // ok
         $app->get('certificado/{id_evento:[0-9]+}/{id_peito:[0-9]+}', 'EventoController@certificado');
+        
+        // rotas mcdonald / filtrar por um determinado evento ou listar todos 
+        $app->get('mcdonalds/', 'EventoController@mcDonaldsGeral');
+        $app->get('mcdonalds/{id_evento:[0-9]+}', 'EventoController@mcDonaldsPorEvento');
+        
     });
 
     // usuários
