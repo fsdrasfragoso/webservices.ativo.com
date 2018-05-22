@@ -392,12 +392,64 @@ class Evento {
             $infoIdEvento = ($infoIdEvento) ? $infoIdEvento : implode(',', $arrIdEventosMcDonald);
             $infoLimit = (app('request')->input('limit') != '') ? app('request')->input('limit') : 100;
             $infoOffSet = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
-            
+
             $arrDadosDb = Caches::sql("CALL proc_webservice_mcdonalds('" . $infoIdEvento . "', " . $infoLimit . ", " . $infoOffSet . ")");
+
+            $arrDadosRetorno = array();
+            $arrDadosAux = array();
+            foreach ($arrDadosDb as $objInfo) {
+                // limpando os dados
+                $objAtleta = array();
+                $objComprador = array();
+
+                if (isset($arrDadosAux['pedido']) && $arrDadosAux['pedido'] != $objInfo->pedido) {
+                    $arrDadosAux = array();
+                }
+
+                // dados do pedido
+                $arrDadosAux['evento'] = $objInfo->evento;
+                $arrDadosAux['local'] = $objInfo->local_inscricao;
+                $arrDadosAux['status'] = $objInfo->status;
+                $arrDadosAux['data_pedido'] = $objInfo->data_pedido;
+                $arrDadosAux['data_pagamento'] = $objInfo->data_pagamento;
+                $arrDadosAux['forma_pagamento'] = $objInfo->formapagamento;
+                $arrDadosAux['pedido'] = $objInfo->pedido;
+
+                // salvando os dados do comprador
+                $objComprador['nome'] = $objInfo->nome_comprador;
+                $objComprador['documento'] = $objInfo->documento_comprador;
+                $objComprador['nascimento'] = $objInfo->nascimento_comprador;
+                $objComprador['cep'] = $objInfo->cep_comprador;
+                $objComprador['estado'] = $objInfo->estado_comprador;
+                $objComprador['cidade'] = $objInfo->cidade_comprador;
+                $objComprador['bairro'] = $objInfo->bairro_comprador;
+                $objComprador['endereco'] = $objInfo->endereco_comprador;
+
+                $arrDadosAux['comprador'] = $objComprador;
+
+                $objAtleta['inscricao'] = $objInfo->inscricao;
+                $objAtleta['nome'] = $objInfo->nome_atleta;
+                $objAtleta['documento'] = $objInfo->documento_atleta;
+                $objAtleta['nascimento'] = $objInfo->nascimento_atleta;
+                $objAtleta['sexo'] = $objInfo->sexo_atleta;
+                $objAtleta['modalidade'] = $objInfo->modalidade_atleta;
+                $objAtleta['categoria'] = $objInfo->categoria_atleta;
+                $objAtleta['preco'] = $objInfo->valor_unitario_atleta;
+                $objAtleta['taxa'] = $objInfo->despesa_atleta;
+                $objAtleta['desconto'] = $objInfo->desconto_atleta;
+
+                $arrDadosAux['atletas'][$objAtleta['inscricao']] = $objAtleta;
+
+                // removendo os index                
+                $arrDadosAux['atletas'] = array_values($arrDadosAux['atletas']);
+                $arrDadosAux['quantidade_atletas'] = count($arrDadosAux['atletas']);
+
+                $arrDadosRetorno[$arrDadosAux['pedido']] = $arrDadosAux;
+            }
 
             if ($arrDadosDb) {
                 $arrRetorno['status'] = 'ok';
-                $arrRetorno['dados'] = $arrDadosDb;
+                $arrRetorno['dados'] = array_values($arrDadosRetorno);
             }
         }
 
