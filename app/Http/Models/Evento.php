@@ -406,17 +406,19 @@ class Evento {
                     $arrDadosAux = array();
                 }
 
-                // dados do pedido
+                // dados do pedido                
+                $arrDadosAux['pedido'] = $objInfo->pedido;
                 $arrDadosAux['evento'] = $objInfo->evento;
                 $arrDadosAux['local'] = $objInfo->local_inscricao;
                 $arrDadosAux['status'] = $objInfo->status;
                 $arrDadosAux['data_pedido'] = $objInfo->data_pedido;
                 $arrDadosAux['data_pagamento'] = $objInfo->data_pagamento;
                 $arrDadosAux['forma_pagamento'] = $objInfo->formapagamento;
-                $arrDadosAux['pedido'] = $objInfo->pedido;
+                $arrDadosAux['quantidade_atletas'] = $objInfo->qtd_atletas;
 
                 // salvando os dados do comprador
                 $objComprador['nome'] = $objInfo->nome_comprador;
+                $objComprador['email'] = $objInfo->email_comprador;
                 $objComprador['documento'] = $objInfo->documento_comprador;
                 $objComprador['nascimento'] = $objInfo->nascimento_comprador;
                 $objComprador['cep'] = $objInfo->cep_comprador;
@@ -424,6 +426,8 @@ class Evento {
                 $objComprador['cidade'] = $objInfo->cidade_comprador;
                 $objComprador['bairro'] = $objInfo->bairro_comprador;
                 $objComprador['endereco'] = $objInfo->endereco_comprador;
+                $objComprador['preco'] = $objInfo->valor_pedido;
+                $objComprador['taxa'] = $objInfo->valor_taxa;
 
                 $arrDadosAux['comprador'] = $objComprador;
 
@@ -441,8 +445,7 @@ class Evento {
                 $arrDadosAux['atletas'][$objAtleta['inscricao']] = $objAtleta;
 
                 // removendo os index                
-                $arrDadosAux['atletas'] = array_values($arrDadosAux['atletas']);
-                $arrDadosAux['quantidade_atletas'] = count($arrDadosAux['atletas']);
+                $arrDadosAux['atletas'] = array_values($arrDadosAux['atletas']);                
 
                 $arrDadosRetorno[$arrDadosAux['pedido']] = $arrDadosAux;
             }
