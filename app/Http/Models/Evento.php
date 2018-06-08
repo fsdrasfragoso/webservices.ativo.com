@@ -408,13 +408,14 @@ class Evento {
 
                 // dados do pedido                
                 $arrDadosAux['pedido'] = $objInfo->pedido;
+                $arrDadosAux['id_evento'] = $objInfo->id_evento;
                 $arrDadosAux['evento'] = $objInfo->evento;
                 $arrDadosAux['local'] = $objInfo->local_inscricao;
                 $arrDadosAux['status'] = $objInfo->status;
                 $arrDadosAux['data_pedido'] = $objInfo->data_pedido;
                 $arrDadosAux['data_pagamento'] = $objInfo->data_pagamento;
                 $arrDadosAux['forma_pagamento'] = $objInfo->formapagamento;
-                $arrDadosAux['quantidade_atletas'] = $objInfo->qtd_atletas;
+
 
                 // salvando os dados do comprador
                 $objComprador['nome'] = $objInfo->nome_comprador;
@@ -433,6 +434,8 @@ class Evento {
 
                 $objAtleta['inscricao'] = $objInfo->inscricao;
                 $objAtleta['nome'] = $objInfo->nome_atleta;
+                $objAtleta['telefone'] = $objInfo->telefone;
+                $objAtleta['celular'] = $objInfo->celular;
                 $objAtleta['documento'] = $objInfo->documento_atleta;
                 $objAtleta['nascimento'] = $objInfo->nascimento_atleta;
                 $objAtleta['sexo'] = $objInfo->sexo_atleta;
@@ -445,8 +448,8 @@ class Evento {
                 $arrDadosAux['atletas'][$objAtleta['inscricao']] = $objAtleta;
 
                 // removendo os index                
-                $arrDadosAux['atletas'] = array_values($arrDadosAux['atletas']);                
-
+                $arrDadosAux['atletas'] = array_values($arrDadosAux['atletas']);
+                $arrDadosAux['quantidade_atletas'] = count($arrDadosAux['atletas']);
                 $arrDadosRetorno[$arrDadosAux['pedido']] = $arrDadosAux;
             }
 
