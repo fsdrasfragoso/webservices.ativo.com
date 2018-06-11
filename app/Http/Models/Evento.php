@@ -398,7 +398,7 @@ class Evento {
 
             // exibir informações de inscritos
             if (isset($infoIdEvento)) {
-                $arrDadosInscritos = Caches::sql("CALL proc_dashboard_faturamentos(" . $infoIdEvento . ")");
+                $arrDadosInscritos = Caches::sql("CALL proc_dashboard_faturamentos('" . $infoIdEvento . "')");
                 foreach ($arrDadosInscritos as $infoInscritos) {
                     if ($infoInscritos->status_pagamento != 'TOTAL') {
                         $arrInfoInscritos[strtolower($infoInscritos->status_pagamento)] = $infoInscritos->qtd;
