@@ -396,6 +396,16 @@ class Evento {
 
             $arrDadosDb = Caches::sql("CALL proc_webservice_mcdonalds('" . $infoIdEvento . "', '" . $infoStatus . "', " . $infoLimit . ", " . $infoOffSet . ")");
 
+            // exibir informações de inscritos
+            if (isset($infoIdEvento)) {
+                $arrDadosInscritos = Caches::sql("CALL proc_dashboard_faturamentos(" . $infoIdEvento . ")");
+                foreach ($arrDadosInscritos as $infoInscritos) {
+                    if ($infoInscritos->status_pagamento != 'TOTAL') {
+                        $arrInfoInscritos[strtolower($infoInscritos->status_pagamento)] = $infoInscritos->qtd;
+                    }
+                }
+            }
+
             $arrDadosRetorno = array();
             $arrDadosAux = array();
             foreach ($arrDadosDb as $objInfo) {
@@ -456,6 +466,7 @@ class Evento {
 
             if ($arrDadosDb) {
                 $arrRetorno['status'] = 'ok';
+                $arrRetorno['info'] = $arrInfoInscritos;
                 $arrRetorno['dados'] = array_values($arrDadosRetorno);
             }
         }
