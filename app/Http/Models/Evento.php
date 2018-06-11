@@ -392,7 +392,7 @@ class Evento {
             $infoIdEvento = ($infoIdEvento) ? $infoIdEvento : implode(',', $arrIdEventosMcDonald);
             $infoLimit = (app('request')->input('limit') != '') ? app('request')->input('limit') : 5000;
             $infoOffSet = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
-            $infoStatus = (app('request')->input('status') != '') ? strtoupper(app('request')->input('status')) : 0;
+            $infoStatus = (app('request')->input('status') != '') ? ucfirst(strtolower(app('request')->input('status'))) : 0;
 
             $arrDadosDb = Caches::sql("CALL proc_webservice_mcdonalds('" . $infoIdEvento . "', '" . $infoStatus . "', " . $infoLimit . ", " . $infoOffSet . ")");
 
