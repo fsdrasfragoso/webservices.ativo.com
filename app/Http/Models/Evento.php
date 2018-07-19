@@ -394,7 +394,15 @@ class Evento {
             $infoOffSet = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
             $infoStatus = (app('request')->input('status') != '') ? ucfirst(strtolower(app('request')->input('status'))) : 0;
 
-            $arrDadosDb = Caches::sql("CALL proc_webservice_mcdonalds('" . $infoIdEvento . "', '" . $infoStatus . "', " . $infoLimit . ", " . $infoOffSet . ")");
+            $infoFaturar = 0;
+
+            // se o filtro for faturar, passo como pendente e faturar = 1
+            if ($infoStatus == 'Faturar' && app('request')->input('status') != '') {
+                $infoStatus = 'Pendente';
+                $infoFaturar = 1;
+            }
+
+            $arrDadosDb = Caches::sql("CALL proc_webservice_mcdonalds('" . $infoIdEvento . "', '" . $infoStatus . "', '" . $infoFaturar . "'," . $infoLimit . ", " . $infoOffSet . ")");
 
             // exibir informações de inscritos
             if (isset($infoIdEvento)) {
