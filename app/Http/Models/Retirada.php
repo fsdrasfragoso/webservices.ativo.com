@@ -67,12 +67,14 @@ class Retirada {
         if ($arrDadosDb) {
 
             $arrDadosDb[0]->modalidades = self::modalidadesEventos($intIdEvento);
+
             $arrDadosDb[0]->categorias = self::categoriasEventos($intIdEvento);
             $arrDadosDb[0]->camisetas = self::camisetasEvento($intIdEvento);
 
             // $arrDadosDb[0]->inscritos = self::inscritosEvento($intIdEvento, $tipo);
             // $arrDadosDb[0]->usuarios = self::usuariosEvento($intIdEvento, $tipo);
             $arrDadosDb[0]->produtos = self::pedidosProdutosEvento($intIdEvento);
+            $arrDadosDb[0]->produtosPosInscricao = self::pedidosProdutosEventoPosInscricao($intIdEvento);
 
             $arrRetorno['status'] = 'ok';
             $arrRetorno['dados'] = $arrDadosDb[0];
@@ -138,6 +140,25 @@ class Retirada {
 
         return $arrRetorno;
     }
+
+    static function pedidosProdutosEventoPosInscricao($intIdEvento) {
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /retirada/pedidos-produtos-evento-pos-inscricao/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /retirada/pedidos-produtos-evento-pos-inscricao/{ID_EVENTO}';
+        }
+
+        $arrDadosDb = Caches::sql("CALL proc_webservice_produtos_evento_pos_inscricao(" . $intIdEvento . ")");
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+
+        return $arrRetorno;
+    }    
 
     static function camisetasEvento($intIdEvento) {
         $arrRetorno['status'] = 'error';
