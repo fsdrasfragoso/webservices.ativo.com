@@ -382,7 +382,7 @@ class Evento {
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/mcdonalds/' . $infoIdEvento;
 
-        $arrIdEventosMcDonald = array(35240, 35241, 35242, 35243, 35244, 35451);
+        $arrIdEventosMcDonald = array(35240, 35241, 35242, 35243, 35244, 35451, 36583);
 
         // validação dos eventos
         if (!in_array($infoIdEvento, $arrIdEventosMcDonald) && $infoIdEvento != null) {
