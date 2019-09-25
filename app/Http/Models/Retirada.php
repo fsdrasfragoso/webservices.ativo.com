@@ -179,6 +179,25 @@ class Retirada {
         return $arrRetorno;
     }
 
+    static function perguntasEvento($intIdEvento) {
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /retirada/perguntas-evento/' . $intIdEvento;
+
+        if (!$intIdEvento) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Nenhum ID de evento repassado ex. /retirada/perguntas-evento/{ID_EVENTO}';
+        }
+
+        $arrDadosDb = Caches::sql("CALL proc_webservice_retirada_pergunta_limite(" . $intIdEvento . ")");
+
+        if ($arrDadosDb) {
+            $arrRetorno['status'] = 'ok';
+            $arrRetorno['dados'] = $arrDadosDb;
+        }
+
+        return $arrRetorno;
+    }
+
     /* Fluxo de retirada */
 
     static function sincronizarRetiradaEvento() {

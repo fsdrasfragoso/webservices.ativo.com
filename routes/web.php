@@ -92,6 +92,8 @@ $app->group(['prefix' => 'br'], function () use ($app) {
 
         $app->get('camisetas-evento/{id_evento:[0-9]+}', 'RetiradaController@camisetasEvento');
 
+        $app->get('perguntas-evento/{id_evento:[0-9]+}', 'RetiradaController@perguntasEvento');
+
 
         /* fluxo de sincronização */
         $app->post('sincronizar/retiradas', 'RetiradaController@sincronizarRetiradaEvento');

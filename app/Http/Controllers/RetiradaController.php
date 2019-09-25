@@ -86,6 +86,18 @@ class RetiradaController {
         return response()->json($arrDados);
     }
 
+     /*
+      @method Listagem de todas Perguntas e Respostas por Evento
+      @param intIdEvento - Id do Evento para retornar os dados
+     */
+
+    function perguntasEvento($intIdEvento) {
+        $arrDados = Retirada::perguntasEvento($intIdEvento);
+        return response()->json($arrDados);
+    }
+
+    
+
     /*
       @method Sincronização do Evento
       @param intIdEvento - Id do Evento para atualizar os dados
