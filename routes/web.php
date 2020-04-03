@@ -48,7 +48,8 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         // rotas mcdonald / filtrar por um determinado evento ou listar todos 
         $app->get('mcdonalds/', 'EventoController@mcDonaldsGeral');
         $app->get('mcdonalds/{id_evento:[0-9]+}', 'EventoController@mcDonaldsPorEvento');
-        
+        $app->get('99run/{id_evento:[0-9]+}','EventoController@run99');
+
     });
 
     // usuários
