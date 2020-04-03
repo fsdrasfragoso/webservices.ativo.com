@@ -82,4 +82,9 @@ class EventoController {
         return response()->json($arrDados);
     }
 
+    function run99($infoIdEvento){
+        $arrDados = Evento::run99($infoIdEvento);
+        return response()->json($arrDados); 
+    }
+
 }
