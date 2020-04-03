@@ -377,7 +377,111 @@ class Evento {
             return $arrRetorno['dados'];
         }
     }
+    static function run99($infoIdEvento){
+        $arrRetorno['status'] = 'error';
+        $arrRetorno['dados'] = 'Nenhum retorno para /evento/99run/' . $infoIdEvento;
 
+        $arrIdEventosMcDonald = array(37361);
+
+        // validação dos eventos
+        if (!in_array($infoIdEvento, $arrIdEventosMcDonald) && $infoIdEvento != null) {
+            $arrRetorno['status'] = 'error';
+            $arrRetorno['dados'] = 'Favor informar o ID do evento do 99RUN';
+        } else {
+            $infoIdEvento = ($infoIdEvento) ? $infoIdEvento : implode(',', $arrIdEventosMcDonald);
+            $infoLimit = (app('request')->input('limit') != '') ? app('request')->input('limit') : 5000;
+            $infoOffSet = (app('request')->input('offset') != '') ? app('request')->input('offset') : 0;
+            $infoStatus = (app('request')->input('status') != '') ? ucfirst(strtolower(app('request')->input('status'))) : 0;
+
+            $infoFaturar = 0;
+
+            // se o filtro for faturar, passo como pendente e faturar = 1
+            if ($infoStatus == 'Faturar' && app('request')->input('status') != '') {
+                $infoStatus = 'Pendente';
+                $infoFaturar = 1;
+            }
+
+            $arrDadosDb = Caches::sql("CALL proc_webservice_mcdonalds('" . $infoIdEvento . "', '" . $infoStatus . "', '" . $infoFaturar . "'," . $infoLimit . ", " . $infoOffSet . ")");
+
+            // exibir informações de inscritos
+            if (isset($infoIdEvento)) {
+                $arrDadosInscritos = Caches::sql("CALL proc_dashboard_faturamentos('" . $infoIdEvento . "')");
+                foreach ($arrDadosInscritos as $infoInscritos) {
+                    if ($infoInscritos->status_pagamento != 'TOTAL') {
+                        $arrInfoInscritos[strtolower($infoInscritos->status_pagamento)] = $infoInscritos->qtd;
+                    }
+                }
+            }
+
+            $arrDadosRetorno = array();
+            $arrDadosAux = array();
+            foreach ($arrDadosDb as $objInfo) {
+                // limpando os dados
+                $objAtleta = array();
+                $objComprador = array();
+
+                if (isset($arrDadosAux['pedido']) && $arrDadosAux['pedido'] != $objInfo->pedido) {
+                    $arrDadosAux = array();
+                }
+
+                // dados do pedido                
+                $arrDadosAux['pedido'] = $objInfo->pedido;
+                $arrDadosAux['id_evento'] = $objInfo->id_evento;
+                $arrDadosAux['evento'] = $objInfo->evento;
+                $arrDadosAux['local'] = $objInfo->local_inscricao;
+                $arrDadosAux['status'] = $objInfo->status;
+                $arrDadosAux['data_pedido'] = $objInfo->data_pedido;
+                $arrDadosAux['data_pagamento'] = $objInfo->data_pagamento;
+                $arrDadosAux['forma_pagamento'] = $objInfo->formapagamento;
+
+
+                // salvando os dados do comprador
+                $objComprador['nome'] = $objInfo->nome_comprador;
+                $objComprador['email'] = $objInfo->email_comprador;
+                $objComprador['documento'] = $objInfo->documento_comprador;
+                $objComprador['nascimento'] = $objInfo->nascimento_comprador;
+                $objComprador['cep'] = $objInfo->cep_comprador;
+                $objComprador['estado'] = $objInfo->estado_comprador;
+                $objComprador['cidade'] = $objInfo->cidade_comprador;
+                $objComprador['bairro'] = $objInfo->bairro_comprador;
+                $objComprador['endereco'] = $objInfo->endereco_comprador;
+                $objComprador['preco'] = $objInfo->valor_pedido;
+                $objComprador['taxa'] = $objInfo->valor_taxa;
+
+                $arrDadosAux['comprador'] = $objComprador;
+
+                $objAtleta['inscricao'] = $objInfo->inscricao;
+                $objAtleta['nome'] = $objInfo->nome_atleta;
+                $objAtleta['telefone'] = $objInfo->telefone;
+                $objAtleta['celular'] = $objInfo->celular;
+                $objAtleta['documento'] = $objInfo->documento_atleta;
+                $objAtleta['nascimento'] = $objInfo->nascimento_atleta;
+                $objAtleta['sexo'] = $objInfo->sexo_atleta;
+                $objAtleta['modalidade'] = $objInfo->modalidade_atleta;
+                $objAtleta['categoria'] = $objInfo->categoria_atleta;
+                $objAtleta['preco'] = $objInfo->valor_unitario_atleta;
+                $objAtleta['taxa'] = $objInfo->despesa_atleta;
+                $objAtleta['desconto'] = $objInfo->desconto_atleta;
+
+                $arrDadosAux['atletas'][$objAtleta['inscricao']] = $objAtleta;
+
+                // removendo os index                
+                $arrDadosAux['atletas'] = array_values($arrDadosAux['atletas']);
+                $arrDadosAux['quantidade_atletas'] = count($arrDadosAux['atletas']);
+                $arrDadosRetorno[$arrDadosAux['pedido']] = $arrDadosAux;
+            }
+
+            if ($arrDadosDb) {
+                $arrRetorno['status'] = 'ok';
+                $arrRetorno['info'] = $arrInfoInscritos;
+                $arrRetorno['dados'] = array_values($arrDadosRetorno);
+            }
+        }
+
+
+        return $arrRetorno;
+    
+    }
     static function mcDonalds($infoIdEvento) {
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/mcdonalds/' . $infoIdEvento;
