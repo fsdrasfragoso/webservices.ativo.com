@@ -88,7 +88,8 @@ class EventoController {
     }
 
     function freedomResult(){
-        echo 'entrou'; exit;
+        $arrDados = Evento::freedomResult(); 
+        return response()->json($arrDados); 
     }
 
 }
