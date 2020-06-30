@@ -376,7 +376,16 @@ class Evento {
         } else {
             return $arrRetorno['dados'];
         }
+    } 
+    
+    static function freedomResult(){
+            $email = app('request')->input('email');
+            $arrDadosDb = [];
+          $arrDadosDb['dados'] = Caches::sql("SELECT id_usuario FROM sa_usuario WHERE ds_email = 'esdras.neto@ativo.com'"); 
+          var_dump($arrDadosDb); exit;
+            return $arrDadosDb;
     }
+
     static function run99($infoIdEvento){
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/99run/' . $infoIdEvento;
