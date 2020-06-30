@@ -50,6 +50,8 @@ $app->group(['prefix' => 'br'], function () use ($app) {
         $app->get('mcdonalds/{id_evento:[0-9]+}', 'EventoController@mcDonaldsPorEvento');
         $app->get('99run/{id_evento:[0-9]+}','EventoController@run99');
 
+        $app->get('freedom/resultados','EventoController@freedomResult');
+
     });
 
     // usuários
