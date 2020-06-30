@@ -380,10 +380,16 @@ class Evento {
     
     static function freedomResult(){
             $email = app('request')->input('email');
-            $arrDadosDb = [];
-          $arrDadosDb['dados'] = Caches::sql("SELECT id_usuario FROM sa_usuario WHERE ds_email = 'esdras.neto@ativo.com'"); 
-          var_dump($arrDadosDb); exit;
-            return $arrDadosDb;
+            $senha = md5(app('request')->input('senha'));          
+            $islogado = Caches::sql("SELECT id_usuario FROM sa_usuario WHERE ds_email = '$email' AND ds_senha = '$senha'"); 
+            
+            if(!empty($islogado)){
+                return 'logado';
+            }
+
+            return 'Descolado';
+
+            
     }
 
     static function run99($infoIdEvento){
