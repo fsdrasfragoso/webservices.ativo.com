@@ -380,7 +380,7 @@ class Evento {
     
     static function freedomResult(){
             $cpf = app('request')->input('cpf');
-            $nr_peito = md5(app('request')->input('nr_peito'));          
+            $nr_peito = app('request')->input('nr_peito');          
             $dadosCliente = Caches::sql("SELECT
                                          p.id_pedido,
                                          u.id_usuario,
