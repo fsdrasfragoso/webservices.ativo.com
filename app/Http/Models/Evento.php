@@ -379,17 +379,30 @@ class Evento {
     } 
     
     static function freedomResult(){
-            $email = app('request')->input('email');
-            $senha = md5(app('request')->input('senha'));          
-            $islogado = Caches::sql("SELECT id_usuario FROM sa_usuario WHERE ds_email = '$email' AND ds_senha = '$senha'"); 
+            $cpf = app('request')->input('cpf');
+            $nr_peito = md5(app('request')->input('nr_peito'));          
+            $dadosCliente = Caches::sql("SELECT
+                                         p.id_pedido,
+                                         u.id_usuario,
+                                         u.ds_nomecompleto,
+                                       CASE
+                                             WHEN u.fl_sexo = 'M' THEN 'Masculino'
+                                             ELSE 'Feminino' END  as ds_sexo
+                                     FROM
+                                         sa_pedido_evento AS pe 
+                                     INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
+                                     INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
+                                     WHERE
+                                         id_evento = 37945
+                                     AND p.id_pedido_status = 2
+                                     AND u.nr_documento = $cpf
+                                     AND pe.nr_peito = $nr_peito;"); 
             
-            if(!empty($islogado)){
-                return 'logado';
+            if(!empty($dadosCliente)){
+                return $dadosCliente;
             }
 
-            return 'Descolado';
-
-            
+            return 'login incorreto';
     }
 
     static function run99($infoIdEvento){
