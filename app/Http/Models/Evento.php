@@ -376,7 +376,35 @@ class Evento {
         } else {
             return $arrRetorno['dados'];
         }
+    } 
+    
+    static function freedomResult(){
+            $cpf = app('request')->input('cpf');
+            $nr_peito = md5(app('request')->input('nr_peito'));          
+            $dadosCliente = Caches::sql("SELECT
+                                         p.id_pedido,
+                                         u.id_usuario,
+                                         u.ds_nomecompleto,
+                                       CASE
+                                             WHEN u.fl_sexo = 'M' THEN 'Masculino'
+                                             ELSE 'Feminino' END  as ds_sexo
+                                     FROM
+                                         sa_pedido_evento AS pe 
+                                     INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
+                                     INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
+                                     WHERE
+                                         id_evento = 37945
+                                     AND p.id_pedido_status = 2
+                                     AND u.nr_documento = $cpf
+                                     AND pe.nr_peito = $nr_peito;"); 
+            
+            if(!empty($dadosCliente)){
+                return $dadosCliente;
+            }
+
+            return 'login incorreto';
     }
+
     static function run99($infoIdEvento){
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/99run/' . $infoIdEvento;
