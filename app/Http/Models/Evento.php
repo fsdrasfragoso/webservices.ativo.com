@@ -387,7 +387,7 @@ class Evento {
                                          u.id_usuario,
                                          u.ds_nomecompleto,
                                          pe.nr_peito,
-                                         u.nr_documento
+                                         u.nr_documento,
                                        CASE
                                              WHEN u.fl_sexo = 'M' THEN 'Masculino'
                                              ELSE 'Feminino' END  as ds_sexo
