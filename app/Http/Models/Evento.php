@@ -378,7 +378,7 @@ class Evento {
         }
     } 
     
-    static function freedomResult(){
+    static function freedomLogin(){
             $cpf = app('request')->input('cpf');
             $nr_peito = app('request')->input('nr_peito'); 
             $dadosClinete = [];                     
@@ -406,9 +406,40 @@ class Evento {
                 return $dadosCliente;
             }
             $dadosCliente['status'] = 400;   
-            return 'login incorreto';
+            return $dadosCliente;
     }
 
+    static function freedomImagem(){
+        $curl = curl_init();
+        
+        $obj = array(
+            "email" => "paulo@paulo.com",
+            "senha" => "123456"
+        );
+
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://admin.99run.com/api.json",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_POSTFIELDS => json_encode($obj),
+          CURLOPT_HTTPHEADER => array(            
+            'Content-Type:application/json'
+          ),
+        ));
+      
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+      
+        curl_close($curl);
+        if(empty($err)){
+            return json_decode($response);
+        }
+        return json_decode($err);
+     }
 
 
     static function run99($infoIdEvento){
