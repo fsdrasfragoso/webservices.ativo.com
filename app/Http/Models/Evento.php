@@ -380,11 +380,14 @@ class Evento {
     
     static function freedomResult(){
             $cpf = app('request')->input('cpf');
-            $nr_peito = app('request')->input('nr_peito');          
-            $dadosCliente = Caches::sql("SELECT
+            $nr_peito = app('request')->input('nr_peito'); 
+            $dadosClinete = [];                     
+            $dadosCliente['dados'] = Caches::sql("SELECT
                                          p.id_pedido,
                                          u.id_usuario,
                                          u.ds_nomecompleto,
+                                         pe.nr_peito,
+                                         u.nr_documento
                                        CASE
                                              WHEN u.fl_sexo = 'M' THEN 'Masculino'
                                              ELSE 'Feminino' END  as ds_sexo
@@ -399,11 +402,14 @@ class Evento {
                                      AND pe.nr_peito = $nr_peito;"); 
             
             if(!empty($dadosCliente)){
+                $dadosCliente['status'] = 200;
                 return $dadosCliente;
             }
-
+            $dadosCliente['status'] = 400;   
             return 'login incorreto';
     }
+
+
 
     static function run99($infoIdEvento){
         $arrRetorno['status'] = 'error';
