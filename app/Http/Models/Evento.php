@@ -383,23 +383,30 @@ class Evento {
             $nr_peito = app('request')->input('nr_peito'); 
             $dadosClinete = [];                     
             $dadosCliente['dados'] = Caches::sql("SELECT
-                                         p.id_pedido,
-                                         u.id_usuario,
-                                         u.ds_nomecompleto,
-                                         pe.nr_peito,
-                                         u.nr_documento,
-                                       CASE
-                                             WHEN u.fl_sexo = 'M' THEN 'Masculino'
-                                             ELSE 'Feminino' END  as ds_sexo
-                                     FROM
-                                         sa_pedido_evento AS pe 
-                                     INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
-                                     INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
-                                     WHERE
-                                         id_evento = 37945
-                                     AND p.id_pedido_status = 2
-                                     AND u.nr_documento = $cpf
-                                     AND pe.nr_peito = $nr_peito;"); 
+                                                      p.id_pedido as protocolo,
+                                                      u.id_usuario as id_usuario,
+                                                      u.ds_nomecompleto as nome,
+                                                      pe.nr_peito as numero_peito,
+                                                      u.nr_documento as cpf,
+                                                      date(pe.dt_cadastro) as dt_inscricao,
+                                                      date(e.dt_evento) as data_evento,
+                                                      CASE 
+                                                         WHEN em.nm_modalidade = '5k' THEN 5.0
+                                                           ELSE 10.0 END as distancia,
+                                                    CASE
+                                                          WHEN u.fl_sexo = 'M' THEN 'Masculino'
+                                                          ELSE 'Feminino' END  as ds_sexo
+                                                  FROM
+                                                      sa_pedido_evento AS pe 
+                                                  INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
+                                                  INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
+                                                  INNER JOIN sa_evento as e ON e.id_evento = pe.id_evento
+                                                  INNER JOIN sa_evento_modalidade as em ON em.id_modalidade = pe.id_modalidade
+                                                  WHERE
+                                                      id_evento = 37945
+                                                  AND p.id_pedido_status = 2
+                                                  AND u.nr_documento = $cpf
+                                                  AND pe.nr_peito = $nr_peito;"); 
             
             if(!empty($dadosCliente)){
                 $dadosCliente['status'] = 200;
