@@ -87,9 +87,11 @@ class EventoController {
         return response()->json($arrDados); 
     }
 
-    function freedomResult(){
-        $arrDados = Evento::freedomResult(); 
+    function freedomLogin(){
+        $arrDados = Evento::freedomLogin(); 
         return response()->json($arrDados); 
     }
+
+   
 
 }
