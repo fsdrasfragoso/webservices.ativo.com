@@ -92,9 +92,6 @@ class EventoController {
         return response()->json($arrDados); 
     }
 
-    function freedomImagem(){
-        $arrDados = Evento::freedomImagem(); 
-        return response()->json($arrDados); 
-    }
+   
 
 }

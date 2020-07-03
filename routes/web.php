@@ -52,7 +52,7 @@ $app->group(['prefix' => 'br'], function () use ($app) {
 
         $app->post('freedom/login','EventoController@freedomLogin');
 
-        $app->post('freedom/imagem','EventoController@freedomImagem');
+       
 
     });
 
