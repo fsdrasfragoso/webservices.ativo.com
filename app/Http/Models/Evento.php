@@ -443,7 +443,34 @@ class Evento {
       
         curl_close($curl);
         if(empty($err)){
-            return json_decode($response);
+            $ch = curl_init("http://adm.ativo.com/cron/imagemfreedom");
+            $nr_peito = app('request')->input('nr_peito'); 
+            $cfile = new CURLFile(app('request')->file('arquivo'), app('request')->file('arquivo')->getClientMimeType(), 'arquivo');
+            $params = array(
+                'arquivo' => $cfile,
+                'nr_peito' => $nr_peito               
+            );
+            
+            curl_setopt_array($ch, array(
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_INFILESIZE => $_FILES['arquive']['size'],
+                CURLOPT_POSTFIELDS => $params,
+                CURLOPT_HTTPHEADER => array(                    
+                    "Content-Type: multipart/form-data;"
+                ),
+            ));
+        
+            $content = curl_exec($ch);
+            $err = curl_error($ch);
+      
+        curl_close($ch);
+            if(empty($err)){
+                return $content;
+            }
+
+            return  $err;
+
         }
         return json_decode($err);
      }
