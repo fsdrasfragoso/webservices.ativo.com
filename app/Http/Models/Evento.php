@@ -381,7 +381,41 @@ class Evento {
     static function freedomLogin(){
             $cpf = app('request')->input('cpf');
             $nr_peito = app('request')->input('nr_peito'); 
-            $dadosClinete = [];                     
+            
+            $obj = array(
+                "email" => "paulo@paulo.com",
+                "senha" => "123456"
+            );
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://admin.99run.com/api.json",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_POSTFIELDS => json_encode($obj),
+                CURLOPT_HTTPHEADER => array(            
+                  'Content-Type:application/json'
+                ),
+              ));
+            
+              $response = curl_exec($curl);
+              $err = curl_error($curl);
+            
+              curl_close($curl);
+
+            $dadosClinete = [];   
+            $dadosCliente['token'] = $response; 
+            
+            if(empty($err)){
+                $divide = explode(':',$response);            
+                $token = str_replace("}", "", $divide[1]);
+                $token = str_replace('"', "", $token); 
+                $dadosCliente['token'] =  $token;    
+            }
             $dadosCliente['dados'] = Caches::sql("SELECT
                                                       p.id_pedido as protocolo,
                                                       u.id_usuario as id_usuario,
@@ -389,10 +423,7 @@ class Evento {
                                                       pe.nr_peito as numero_peito,
                                                       u.nr_documento as cpf,
                                                       date(pe.dt_cadastro) as dt_inscricao,
-                                                      date(e.dt_evento) as data_evento,
-                                                      CASE 
-                                                         WHEN em.nm_modalidade = '5k' THEN 5.0
-                                                           ELSE 10.0 END as distancia,
+                                                      date(e.dt_evento) as data_evento,                                                      
                                                     CASE
                                                           WHEN u.fl_sexo = 'M' THEN 'Masculino'
                                                           ELSE 'Feminino' END  as ds_sexo
@@ -400,10 +431,9 @@ class Evento {
                                                       sa_pedido_evento AS pe 
                                                   INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
                                                   INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
-                                                  INNER JOIN sa_evento as e ON e.id_evento = pe.id_evento
-                                                  INNER JOIN sa_evento_modalidade as em ON em.id_modalidade = pe.id_modalidade
+                                                  INNER JOIN sa_evento as e ON e.id_evento = pe.id_evento                                                 
                                                   WHERE
-                                                      id_evento = 37945
+                                                      pe.id_evento = 37945
                                                   AND p.id_pedido_status = 2
                                                   AND u.nr_documento = $cpf
                                                   AND pe.nr_peito = $nr_peito;"); 
