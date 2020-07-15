@@ -433,7 +433,9 @@ class Evento {
                                                       sa_pedido_evento AS pe 
                                                   INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
                                                   INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
-                                                  INNER JOIN sa_evento as e ON e.id_evento = pe.id_evento                                                 
+                                                  INNER JOIN sa_evento as e ON e.id_evento = pe.id_evento 
+                                                  INNER JOIN sa_evento_modalidade as em on  pe.id_modalidade = em.id_modalidade
+                                                
                                                   WHERE
                                                       pe.id_evento = 37945
                                                   AND p.id_pedido_status = 2
