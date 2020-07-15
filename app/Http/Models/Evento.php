@@ -386,6 +386,7 @@ class Evento {
                 "email" => "paulo@paulo.com",
                 "senha" => "123456"
             );
+            $curl = curl_init();
 
             curl_setopt_array($curl, array(
                 CURLOPT_URL => "https://admin.99run.com/api.json",
