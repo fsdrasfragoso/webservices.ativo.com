@@ -423,7 +423,9 @@ class Evento {
                                                       pe.nr_peito as numero_peito,
                                                       u.nr_documento as cpf,
                                                       date(pe.dt_cadastro) as dt_inscricao,
-                                                      date(e.dt_evento) as data_evento,                                                      
+                                                      date(e.dt_evento) as data_evento, 
+                                                      e.id_evento,
+                                                      CASE WHEN em.nm_modalidade = '5k' THEN 5.0 ELSE 10.0 END AS distancia,                                                     
                                                     CASE
                                                           WHEN u.fl_sexo = 'M' THEN 'Masculino'
                                                           ELSE 'Feminino' END  as ds_sexo
