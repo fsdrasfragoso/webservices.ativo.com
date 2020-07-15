@@ -381,7 +381,40 @@ class Evento {
     static function freedomLogin(){
             $cpf = app('request')->input('cpf');
             $nr_peito = app('request')->input('nr_peito'); 
-            $dadosClinete = [];                     
+            
+            $obj = array(
+                "email" => "paulo@paulo.com",
+                "senha" => "123456"
+            );
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://admin.99run.com/api.json",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_POSTFIELDS => json_encode($obj),
+                CURLOPT_HTTPHEADER => array(            
+                  'Content-Type:application/json'
+                ),
+              ));
+            
+              $response = curl_exec($curl);
+              $err = curl_error($curl);
+            
+              curl_close($curl);
+
+            $dadosClinete = [];   
+            $dadosCliente['token'] = $response; 
+            
+            if(empty($err)){
+                $divide = explode(':',$response);            
+                $token = str_replace("}", "", $divide[1]);
+                $token = str_replace('"', "", $token); 
+                $dadosCliente['token'] =  $token;    
+            }
             $dadosCliente['dados'] = Caches::sql("SELECT
                                                       p.id_pedido as protocolo,
                                                       u.id_usuario as id_usuario,
