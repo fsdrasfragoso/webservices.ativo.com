@@ -444,7 +444,7 @@ class Evento {
             
             if(!empty($dadosCliente)){
                 $dadosCliente['status'] = 200;
-                $id_usuario = $dadosCliente['dados'][0]['id_usuario']; 
+                $id_usuario = $dadosCliente['dados'][0]; 
                $dadosCliente['resultado'] = $id_usuario;
                 if(empty($dadosCliente['resultado'])){
                     $dadosCliente['fl_realizado'] = 0;
