@@ -381,6 +381,7 @@ class Evento {
     static function freedomLogin(){
             $cpf = app('request')->input('cpf');
             $nr_peito = app('request')->input('nr_peito'); 
+            $id_evento = app('request')->input('id_evento'); 
             
             $obj = array(
                 "email" => "paulo@paulo.com",
@@ -437,7 +438,7 @@ class Evento {
                                                   INNER JOIN sa_evento_modalidade as em on  pe.id_modalidade = em.id_modalidade
                                                 
                                                   WHERE
-                                                      pe.id_evento = 37945
+                                                      pe.id_evento =  $id_evento
                                                   AND p.id_pedido_status = 2
                                                   AND u.nr_documento = $cpf
                                                   AND pe.nr_peito = $nr_peito;"); 
@@ -464,7 +465,7 @@ class Evento {
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/99run/' . $infoIdEvento;
 
-        $arrIdEventosMcDonald = array(37913,37914,37361,37920,37921,37862,37863,37899, 37919, 37932, 37953);
+        $arrIdEventosMcDonald = array(37913,37914,37361,37920,37921,37862,37863,37899, 37919, 37932, 37953, 37933, 37813);
 
         // validação dos eventos
         if (!in_array($infoIdEvento, $arrIdEventosMcDonald) && $infoIdEvento != null) {
