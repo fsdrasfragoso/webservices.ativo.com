@@ -381,6 +381,7 @@ class Evento {
     static function freedomLogin(){
             $cpf = app('request')->input('cpf');
             $nr_peito = app('request')->input('nr_peito'); 
+            $id_evento = app('request')->input('id_evento'); 
             
             $obj = array(
                 "email" => "paulo@paulo.com",
@@ -437,7 +438,7 @@ class Evento {
                                                   INNER JOIN sa_evento_modalidade as em on  pe.id_modalidade = em.id_modalidade
                                                 
                                                   WHERE
-                                                      pe.id_evento = 37945
+                                                      pe.id_evento =  $id_evento
                                                   AND p.id_pedido_status = 2
                                                   AND u.nr_documento = $cpf
                                                   AND pe.nr_peito = $nr_peito;"); 
