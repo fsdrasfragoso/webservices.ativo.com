@@ -382,7 +382,7 @@ class Evento {
             $cpf = app('request')->input('cpf');
             $nr_peito = app('request')->input('nr_peito'); 
             $id_evento = app('request')->input('id_evento'); 
-            
+           
             $obj = array(
                 "email" => "paulo@paulo.com",
                 "senha" => "123456"
@@ -408,45 +408,46 @@ class Evento {
             
               curl_close($curl);
 
-            $dadosClinete = [];   
-            $dadosCliente['token'] = $response; 
-            
+            $dadosClienete = [];   
+            $dadosClienete['token'] = $response; 
+           
             if(empty($err)){
                 $divide = explode(':',$response);            
                 $token = str_replace("}", "", $divide[1]);
                 $token = str_replace('"', "", $token); 
                 $dadosCliente['token'] =  $token;    
             }
+           
             $dadosCliente['dados'] = Caches::sql("SELECT
-                                                      p.id_pedido as protocolo,
-                                                      u.id_usuario as id_usuario,
-                                                      u.ds_nomecompleto as nome,
-                                                      pe.nr_peito as numero_peito,
-                                                      u.nr_documento as cpf,
-                                                      date(pe.dt_cadastro) as dt_inscricao,
-                                                      date(e.dt_evento) as data_evento, 
-                                                      e.id_evento,
-                                                      6.0 AS distancia,                                                     
-                                                    CASE
-                                                          WHEN u.fl_sexo = 'M' THEN 'Masculino'
-                                                          ELSE 'Feminino' END  as ds_sexo
-                                                  FROM
-                                                      sa_pedido_evento AS pe 
-                                                  INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
-                                                  INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
-                                                  INNER JOIN sa_evento as e ON e.id_evento = pe.id_evento 
-                                                  INNER JOIN sa_evento_modalidade as em on  pe.id_modalidade = em.id_modalidade
-                                                
-                                                  WHERE
-                                                      pe.id_evento =  $id_evento
-                                                  AND p.id_pedido_status = 2
-                                                  AND u.nr_documento = $cpf
-                                                  AND pe.nr_peito = $nr_peito;"); 
+                                                        p.id_pedido as protocolo,
+                                                        u.id_usuario as id_usuario,
+                                                        u.ds_nomecompleto as nome,
+                                                        pe.nr_peito as numero_peito,
+                                                        u.nr_documento as cpf,
+                                                        date(pe.dt_cadastro) as dt_inscricao,
+                                                        date(e.dt_evento) as data_evento, 
+                                                        e.id_evento,
+                                                        6.0 AS distancia,                                                     
+                                                      CASE
+                                                            WHEN u.fl_sexo = 'M' THEN 'Masculino'
+                                                            ELSE 'Feminino' END  as ds_sexo
+                                                    FROM
+                                                        sa_pedido_evento AS pe 
+                                                    INNER JOIN sa_usuario as u ON u.id_usuario = pe.id_usuario 
+                                                    INNER JOIN sa_pedido as p ON p.id_pedido = pe.id_pedido
+                                                    INNER JOIN sa_evento as e ON e.id_evento = pe.id_evento 
+                                                    INNER JOIN sa_evento_modalidade as em on  pe.id_modalidade = em.id_modalidade
+                                                    
+                                                    WHERE
+                                                        pe.id_evento =  $id_evento
+                                                    AND p.id_pedido_status = 2
+                                                    AND u.nr_documento = $cpf
+                                                    AND pe.nr_peito = $nr_peito;"); 
             
             if(!empty($dadosCliente)){
                 $dadosCliente['status'] = 200;
                 $id_usuario = $dadosCliente['dados'][0]->id_usuario; 
-                $dadosCliente['resultado'] = Caches::sql("SELECT * FROM sa_freedom_strava WHERE id_usuario = $id_usuario");
+                $dadosCliente['resultado'] = Caches::sql("SELECT * FROM sa_freedom_strava WHERE id_usuario = $id_usuario AND id_evento = $id_evento");
                 if(empty($dadosCliente['resultado'])){
                     $dadosCliente['fl_realizado'] = 0;
                 }else {
