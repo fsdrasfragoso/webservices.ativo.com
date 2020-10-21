@@ -422,6 +422,7 @@ class Evento {
                                                         p.id_pedido as protocolo,
                                                         u.id_usuario as id_usuario,
                                                         u.ds_nomecompleto as nome,
+                                                        u.ds_email as email,
                                                         pe.nr_peito as numero_peito,
                                                         u.nr_documento as cpf,
                                                         date(pe.dt_cadastro) as dt_inscricao,
