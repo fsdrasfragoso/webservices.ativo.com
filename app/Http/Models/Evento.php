@@ -428,7 +428,7 @@ class Evento {
                                                         date(pe.dt_cadastro) as dt_inscricao,
                                                         date(e.dt_evento) as data_evento, 
                                                         e.id_evento,
-                                                        6.0 AS distancia,                                                     
+                                                        NumericOnly(em.nm_modalidade) as distancia,                                                     
                                                       CASE
                                                             WHEN u.fl_sexo = 'M' THEN 'Masculino'
                                                             ELSE 'Feminino' END  as ds_sexo
