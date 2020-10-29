@@ -25,6 +25,7 @@ pipelines:
     production:
       - step:
           script:
+          - rm -rf vendor/
           - composer update
           - zip -r artifact.zip * .*
           - ls -lhtr
