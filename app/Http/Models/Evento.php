@@ -26,11 +26,22 @@ class Evento {
                 DATE_FORMAT(eve.data_update, '%d/%m/%Y') AS data_update,
                 DATE_FORMAT(eve.data_limite_troca_camiseta, '%d/%m/%Y') AS data_limite_troca_camiseta,
                 DATE_FORMAT(eve.dt_exibicao_evento, '%d/%m/%Y') AS dt_exibicao_evento,
-                sevi.dt_inicio_validacao,
-                sevi.dt_fim_validacao,
+                sevi.hashtag,
+                sevi.fl_ranking,
+                sevi.html_aprovado,
                 sevi.ds_orientacoes,
+                sevi.html_reprovado,
+                sevi.dt_fim_validacao,
                 sevi.valida_por_strava,
-                sevi.valida_por_imagem
+                sevi.valida_por_imagem,
+                sevi.fl_kms_percorridos,
+                sevi.fl_modalidade_unica,
+                sevi.dt_inicio_validacao,
+                sevi.dt_resultado_e_ranking,
+                sevi.nr_cidades_participantes,
+                sevi.html_aprovado_personalizado,
+                sevi.html_reprovado_personalizado,
+                sevi.nr_fotos_exibidas_da_hashtag
                 FROM sa_evento AS eve                 
                 LEFT JOIN sa_usuario AS u ON u.id_usuario = eve.id_criador
                 LEFT JOIN sa_usuario AS m ON m.id_usuario = eve.id_modificador
