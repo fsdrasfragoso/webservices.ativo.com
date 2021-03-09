@@ -32,6 +32,16 @@ pipelines:
           - export DEPLOYMENT_GROUP_NAME
           - pwd
           - python codedeploy_deploy.py # run the deployment script
+    producao:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_PRODUCAO
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
   custom:
     developer:
       - step:
@@ -60,6 +70,16 @@ pipelines:
           - zip -r artifact.zip * .*
           - ls -lhtr
           - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_PRODUCTION
+          - export DEPLOYMENT_GROUP_NAME
+          - pwd
+          - python codedeploy_deploy.py # run the deployment script
+    producao:
+      - step:
+          script:
+          - composer update
+          - zip -r artifact.zip * .*
+          - ls -lhtr
+          - DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME_PRODUCAO
           - export DEPLOYMENT_GROUP_NAME
           - pwd
           - python codedeploy_deploy.py # run the deployment script

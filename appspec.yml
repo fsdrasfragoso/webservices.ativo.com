@@ -2,14 +2,14 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /var/www/ativos/webservices.ativo.com_temp
+    destination: /var/www/ativos/producao.webservices.ativo.com_temp
   - source: public/index.php
-    destination: /var/www/ativos/.repo/webservices.ativo.com
+    destination: /var/www/ativos/.repo/producao.webservices.ativo.com
 permissions:
-  - object: /var/www/ativos/webservices.ativo.com_temp
+  - object: /var/www/ativos/producao.webservices.ativo.com_temp
     owner: php-fpm
     group: php-fpm
-  - object: /var/www/ativos/.repo/webservices.ativo.com
+  - object: /var/www/ativos/.repo/producao.webservices.ativo.com
     owner: root
     group: root
     mode: 444
