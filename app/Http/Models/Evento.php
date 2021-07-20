@@ -484,7 +484,7 @@ class Evento {
         $arrRetorno['status'] = 'error';
         $arrRetorno['dados'] = 'Nenhum retorno para /evento/99run/' . $infoIdEvento;
 
-        $arrIdEventosMcDonald = array(37913,37914,37361,37920,37921,38088,37862,37863,37899, 37919, 37932, 37953, 37933, 37813, 38088);
+        $arrIdEventosMcDonald = array(37913,37914,37361,37920,37921,38088,37862,37863,37899, 37919, 37932, 37953, 37933, 37813, 38123);
 
         // validação dos eventos
         if (!in_array($infoIdEvento, $arrIdEventosMcDonald) && $infoIdEvento != null) {
